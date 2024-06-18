@@ -67,7 +67,6 @@
       <Compile Include="src\API\FarmPlugin.cs" />
       <Compile Include="src\Extensions\ImageExtensions.cs" />
       <Compile Include="src\Plugin.cs" />
-      <Compile Include="src\Temp.cs" />
     </ItemGroup>
 
   <Import Project="..\farmer.targets" />
