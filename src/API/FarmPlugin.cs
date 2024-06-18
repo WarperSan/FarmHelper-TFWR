@@ -49,7 +49,11 @@ public abstract class FarmPlugin<T> : FarmPlugin where T : FarmPlugin
     
     #region Log
 
-    public new static ManualLogSource Log => Instance?.Log;
+    public new static void Log(object data, LogLevel level) => Instance?.Log.Log(level, data ?? "null");
+    public static void LogInfo(object data) => Log(data, LogLevel.Info);
+    public static void LogDebug(object data) => Log(data, LogLevel.Debug);
+    public static void LogWarning(object data) => Log(data, LogLevel.Warning);
+    public static void LogError(object data) => Log(data, LogLevel.Error);
 
     #endregion
 }
