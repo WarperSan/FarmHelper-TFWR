@@ -1,6 +1,7 @@
 ﻿using BepInEx;
 using ModHelper.API;
 using ModHelper.Extensions;
+using ModHelper.Helpers;
 using UnityEngine;
 
 namespace ModHelper;
@@ -14,6 +15,7 @@ public class ModHelperPlugin : FarmPlugin
     protected override void OnAwake()
     {
         Harmony.PatchAll();
+        //Harmony.UnpatchSelf();
     }
 
     private void Start()
@@ -21,8 +23,17 @@ public class ModHelperPlugin : FarmPlugin
         ModsPage.Create();
 
         //PrintAll();
+        CodeHelper.AddFunction(Pow);
     }
 
+    [PyFunction("pow")]
+    private double Pow(Interpreter interpreter, PyNumber a, PyNumber b)
+    {
+        var result = Mathf.Pow((float)a.num, (float)b.num);
+        interpreter.State.ReturnValue = new PyNumber(result);
+        return interpreter.GetOpCount(NodeType.Expr);
+    }
+    
     private void PrintAll()
     {
         foreach (var variable in GameObject.FindObjectsOfType<Transform>())

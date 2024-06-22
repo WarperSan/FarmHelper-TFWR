@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
-using ModHelper.Extensions;
 using UnityEngine;
-using UnityEngine.UI;
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable MemberCanBeProtected.Global
@@ -37,12 +35,18 @@ public abstract class FarmPlugin : BaseUnityPlugin
 
     #endregion
 
-    #region Singleton
+    #region Register
 
     /// <summary>
     /// The list of all the plugins registered, with the fullname of the type.
     /// </summary>
-    internal static readonly Dictionary<string, FarmPlugin> Plugins = new();
+    private static readonly Dictionary<string, FarmPlugin> Plugins = new();
+    
+    /// <summary>
+    /// Copies the list of all the plugins registered and returns it.
+    /// </summary>
+    /// <returns>The list of all the plugins registered</returns>
+    public static Dictionary<string, FarmPlugin> GetPlugins() => new(Plugins);
     
     /// <summary>
     /// Fetches the instance of the plugin of the given type.
@@ -93,48 +97,7 @@ public abstract class FarmPlugin : BaseUnityPlugin
 
     #region Mod Page
 
-    public virtual void GetModPage(GameObject page)
-    {
-        var group = page.AddComponent<HorizontalLayoutGroup>();
-        group.childControlHeight = false;
-        group.childControlWidth = false;
-        group.childForceExpandWidth = false;
-        group.childAlignment = TextAnchor.MiddleLeft;
-        group.spacing = 52 / 2;
-        group.padding.left = 9;
-        group.CalculateLayoutInputHorizontal();
-        
-        // Mod Name
-        var modName = page.transform.Find("PlayButton");
-        modName.name = "ModName";
-        Destroy(modName.Find("InputField (TMP)").gameObject);
-
-        if (modName.TryGetComponent(out ColoredButton btn))
-        {
-            btn.State = ColoredButton.ButtonState.disabled;
-            btn.Text = Name;
-            btn.tooltipDescription = $"Made by: {Author ?? "???"}\nVersion: {Version}";
-        }
-        
-        var toggle = page.transform.Find("EditButton");
-        toggle.name = "ToggleVisibility";
-        
-        var toggleImage = toggle.Find("Image").GetComponent<Image>();
-        toggleImage.LoadSprite<ModHelperPlugin>("Resources.icon-enable.png", 50);
-
-        if (toggle.TryGetComponent(out ColoredButton toggleBtn))
-        {
-            toggleBtn.SetListener(() =>
-            {
-                toggleImage.LoadSprite<ModHelperPlugin>(
-                    toggleImage.sprite.texture.name.Contains("disable")
-                        ? "Resources.icon-enable.png"
-                        : "Resources.icon-disable.png", 50);
-            });
-        }
-        
-        Destroy(page.transform.Find("DeleteButton").gameObject);
-    }
+    public virtual void GetModPage(GameObject page) => ModsPage.DefaultPage(this, page);
 
     #endregion
     
