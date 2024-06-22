@@ -25,9 +25,10 @@ public static class ImageExtensions
         Rect rect,
         Vector2 pivot,
         float pixelsPerUnit
-    ) where T: FarmPlugin {
-        
-        var t = GetTexture<T>($"{typeof(T).Namespace}.{name}");
+    ) where T: FarmPlugin
+    {
+        name = $"{typeof(T).Namespace}.{name}";
+        var t = GetTexture<T>(name);
 
         // If no texture found
         if (t == null)
@@ -35,6 +36,8 @@ public static class ImageExtensions
             image.sprite = null;
             return;
         }
+
+        t.name = name;
         
         // If rect too big for texture
         if (t.height < rect.height || t.width < rect.width)
