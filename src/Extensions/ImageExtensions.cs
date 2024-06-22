@@ -44,7 +44,7 @@ public static class ImageExtensions
         {
             rect.height = Math.Min(t.height, rect.height);
             rect.width = Math.Min(t.width, rect.width);
-            ModHelperPlugin.LogWarning($"Resized rect to fit: {rect.height}x{rect.width}");
+            FarmPlugin.Warning<ModHelperPlugin>($"Resized rect to fit: {rect.height}x{rect.width}");
         }
        
         // Create sprite

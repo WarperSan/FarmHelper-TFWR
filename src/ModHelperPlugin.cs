@@ -6,7 +6,7 @@ using UnityEngine;
 namespace ModHelper;
 
 [BepInPlugin("org.warpersan.modhelper", "Mod Helper", "1.0.0.0")]
-public class ModHelperPlugin : FarmPlugin<ModHelperPlugin>
+public class ModHelperPlugin : FarmPlugin
 {
     /// <inheritdoc />
     public override string Author => "WarperSan";

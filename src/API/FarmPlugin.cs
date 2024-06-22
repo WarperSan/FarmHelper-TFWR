@@ -49,7 +49,7 @@ public abstract class FarmPlugin : BaseUnityPlugin
     /// </summary>
     /// <typeparam name="T">Type of the plugin</typeparam>
     /// <returns>Instance of the plugin or null if not found</returns>
-    protected static T GetPlugin<T>() where T : FarmPlugin 
+    public static T GetPlugin<T>() where T : FarmPlugin 
         => Plugins.GetValueOrDefault(typeof(T).FullName) as T;
 
     /// <summary>
@@ -59,7 +59,7 @@ public abstract class FarmPlugin : BaseUnityPlugin
     {
         var key = GetType().FullName ?? "";
         if (Plugins.ContainsKey(key))
-            LogWarning($"The name '{key}' is already used by another plugin. This plugin will override the previous one.");
+            Warning($"The name '{key}' is already used by another plugin. This plugin will override the previous one.");
         
         Plugins[key] = this;
     }
@@ -69,16 +69,25 @@ public abstract class FarmPlugin : BaseUnityPlugin
     #region Log
 
     /// <inheritdoc cref="BepInEx.Logging.ManualLogSource.Log"/>
-    public void Log(object data, LogLevel level) => Logger.Log(level, data ?? "null");
+    private void Log(object data, LogLevel level) => Logger.Log(level, data ?? "null");
+
+    /// <inheritdoc cref="BepInEx.Logging.ManualLogSource.LogInfo"/>
+    protected void Msg(object data) => Log(data, LogLevel.Info);
     
     /// <inheritdoc cref="BepInEx.Logging.ManualLogSource.LogInfo"/>
-    public void LogInfo(object data) => Log(data, LogLevel.Info);
+    protected void Warning(object data) => Log(data, LogLevel.Warning);
+    
+    /// <inheritdoc cref="BepInEx.Logging.ManualLogSource.LogInfo"/>
+    protected void Error(object data) => Log(data, LogLevel.Error);
+    
+    /// <inheritdoc cref="BepInEx.Logging.ManualLogSource.LogInfo"/>
+    public static void Msg<T>(object data) where T : FarmPlugin => GetPlugin<T>().Msg(data);
     
     /// <inheritdoc cref="BepInEx.Logging.ManualLogSource.LogWarning"/>
-    public void LogWarning(object data) => Log(data, LogLevel.Warning);
+    public static void Warning<T>(object data) where T : FarmPlugin => GetPlugin<T>().Warning(data);
     
     /// <inheritdoc cref="BepInEx.Logging.ManualLogSource.LogError"/>
-    public void LogError(object data) => Log(data, LogLevel.Error);
+    public static void Error<T>(object data) where T : FarmPlugin => GetPlugin<T>().Error(data);
     
     #endregion
 
@@ -130,7 +139,7 @@ public abstract class FarmPlugin : BaseUnityPlugin
     #endregion
     
     #region MonoBehaviour
-
+    
     /// <summary>
     /// Unity calls Awake when an enabled script instance is being loaded.
     /// </summary>
@@ -147,29 +156,6 @@ public abstract class FarmPlugin : BaseUnityPlugin
 
     /// <inheritdoc cref="Awake"/>
     protected virtual void OnAwake() { }
-
-    #endregion
-}
-
-/// <summary>
-/// The type of plugin managed by ModHelper.
-/// This allows ModHelper to get the instance of the plugin.
-/// </summary>
-/// <typeparam name="T">Type of this plugin</typeparam>
-public abstract class FarmPlugin<T> : FarmPlugin where T : FarmPlugin
-{
-    public static T Instance => GetPlugin<T>();
-    
-    #region Log
-
-    /// <inheritdoc cref="BepInEx.Logging.ManualLogSource.LogInfo"/>
-    public new static void LogInfo(object data) => Instance?.LogInfo(data);
-    
-    /// <inheritdoc cref="BepInEx.Logging.ManualLogSource.LogInfo"/>
-    public new static void LogWarning(object data) => Instance?.LogWarning(data);
-    
-    /// <inheritdoc cref="BepInEx.Logging.ManualLogSource.LogError"/>
-    public new static void LogError(object data) => Instance?.LogError(data);
 
     #endregion
 }

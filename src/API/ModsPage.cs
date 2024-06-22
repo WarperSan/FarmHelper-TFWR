@@ -14,7 +14,7 @@ public static class ModsPage
         // Destroy if existed
         if (modsPage != null)
         {
-            ModHelperPlugin.LogWarning("Mods page already existed.");
+            FarmPlugin.Warning<ModHelperPlugin>("Mods page already existed.");
             Object.Destroy(modsPage);
         }
         
@@ -34,7 +34,7 @@ public static class ModsPage
 
         if (prefab == null)
         {
-            ModHelperPlugin.LogError("Prefab for the a mod page was not found.");
+            FarmPlugin.Error<ModHelperPlugin>("Prefab for the a mod page was not found.");
             return;
         }
         
@@ -51,7 +51,7 @@ public static class ModsPage
         
             // If invalid, skip
             if (pluginUI == null)
-                ModHelperPlugin.LogWarning($"Invalid UI for '{key}' for the mod page.");
+                FarmPlugin.Warning<ModHelperPlugin>($"Invalid UI for '{key}' for the mod page.");
         }
     }
 
@@ -62,7 +62,7 @@ public static class ModsPage
         // Add button
         if (!UiHelper.AddTitleButton(1, 3, out var modsBtn))
         {
-            ModHelperPlugin.LogWarning("Could not create the title button for ModsPage.");
+            FarmPlugin.Warning<ModHelperPlugin>("Could not create the title button for ModsPage.");
             Object.Destroy(modsPage);
             return false;
         }
