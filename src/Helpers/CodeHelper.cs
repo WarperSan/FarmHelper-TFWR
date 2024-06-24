@@ -27,14 +27,14 @@ public static class CodeHelper
     /// <param name="color">Color of the match</param>
     /// <param name="addFromStart">Determines if the tag is added to the start or to the end of the list</param>
     /// <remarks>
-    /// If <see cref="addFromStart"/> is true, this code tag can overwrite existing code tags.
+    /// If <paramref name="addFromStart"/> is true, this code tag can overwrite existing code tags.
     /// </remarks>
     public static void AddCodeColor(string pattern, string color, bool addFromStart = false)
     {
         // If invalid color, skip
         if (!IsValidColor(color))
         {
-            FarmPlugin.Error<ModHelperPlugin>($"'{color}' is not a valid HEX code and will not be put on the pattern '{pattern}'.");
+            Log.Error<ModHelperPlugin>($"'{color}' is not a valid HEX code and will not be put on the pattern '{pattern}'.");
             return;
         }
         
@@ -67,6 +67,16 @@ public static class CodeHelper
     #region Function
 
     /// <summary>
+    /// Adds built-in functions to the game.
+    /// </summary>
+    /// <param name="callbacks">Functions to call when executing each built-in function</param>
+    public static void AddFunction(params Delegate[] callbacks)
+    {
+        foreach (var callback in callbacks)
+            AddFunction(callback);
+    }
+
+    /// <summary>
     /// <inheritdoc cref="AddFunction(string,System.Func{System.Collections.Generic.List{IPyObject},double})"/>
     /// </summary>
     /// <param name="callback">Function to call when executing</param>
@@ -81,7 +91,7 @@ public static class CodeHelper
         // Must have PyFunctionAttribute
         if (attr == null)
         {
-            FarmPlugin.Msg<ModHelperPlugin>($"'{info.Name}' does not contain the attribute '{nameof(PyFunctionAttribute)}'.");
+            Log.Info<ModHelperPlugin>($"'{info.Name}' does not contain the attribute '{nameof(PyFunctionAttribute)}'.");
             return;
         }
 
@@ -126,14 +136,13 @@ public static class CodeHelper
     {
         var functions = Saver.Inst.mainFarm.workspace.interpreter.bf.functions;
 
-        if (functions.ContainsKey(name))
+        if (!functions.TryAdd(name, callback))
         {
-            FarmPlugin.Msg<ModHelperPlugin>($"A function named '' already existed.");
+            Log.Info<ModHelperPlugin>($"A function named '{name}' already existed.");
             return;            
         }
-        
-        functions[name] = callback;
-        Saver.Inst.mainFarm.GetField<HashSet<string>>("unlocks").Add(name);
+
+        Saver.Inst.mainFarm.GetField<HashSet<string>>("unlocks").Add(name.ToLower());
     }
 
     private static object[] ConvertParams(Type[] types, List<IPyObject> parameters)

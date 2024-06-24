@@ -2,10 +2,20 @@
 
 namespace ModHelper.Helpers;
 
+/// <summary>
+/// Class helping for UI elements
+/// </summary>
 public static class UiHelper
 {
     private const string TEMPLATE = Constants.TITLE_PATH + "/PlayButton";
     
+    /// <summary>
+    /// Adds a button to the title screen
+    /// </summary>
+    /// <param name="x">X grid position</param>
+    /// <param name="y">Y grid position</param>
+    /// <param name="button">Button created</param>
+    /// <returns>Was successfully created</returns>
     public static bool AddTitleButton(int x, int y, out ColoredButton button)
     {
         button = null;
@@ -38,5 +48,9 @@ public static class UiHelper
         return true;
     }
 
+    /// <summary>
+    /// Sets active the title screen
+    /// </summary>
+    /// <param name="isActive"></param>
     public static void SetActiveTitle(bool isActive) => GameObject.Find(Constants.TITLE_PATH)?.SetActive(isActive);
 }

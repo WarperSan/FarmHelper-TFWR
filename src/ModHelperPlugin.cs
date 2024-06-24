@@ -1,29 +1,35 @@
 ﻿using BepInEx;
+using HarmonyLib;
 using ModHelper.API;
-using ModHelper.Extensions;
 using ModHelper.Helpers;
 using UnityEngine;
+// ReSharper disable StringLiteralTypo
 
 namespace ModHelper;
 
+/// <summary>
+/// Plugin made to help other plugins 
+/// </summary>
 [BepInPlugin("org.warpersan.modhelper", "Mod Helper", "1.0.0.0")]
-public class ModHelperPlugin : FarmPlugin
+[FarmInfo("WarperSan")]
+public class ModHelperPlugin : BaseUnityPlugin
 {
-    /// <inheritdoc />
-    public override string Author => "WarperSan";
-
-    protected override void OnAwake()
+    private void OnAwake()
     {
-        Harmony.PatchAll();
+        var harmony = new Harmony(Info.Metadata.GUID);
+        harmony.PatchAll();
         //Harmony.UnpatchSelf();
     }
 
     private void Start()
     {
-        ModsPage.Create();
-
+        PluginsPage.Create();
+        
         //PrintAll();
         CodeHelper.AddFunction(Pow);
+        CodeHelper.AddFunction(FloorToInt);
+        //CodeHelper.AddCodeColor(@"intFloor(?=\(.*?\))", "#33b5aa", true);
+        //CodeHelper.AddCodeColor(@"pow(?=\(.*?\))", "#33b5aa", true);
     }
 
     [PyFunction("pow")]
@@ -33,13 +39,12 @@ public class ModHelperPlugin : FarmPlugin
         interpreter.State.ReturnValue = new PyNumber(result);
         return interpreter.GetOpCount(NodeType.Expr);
     }
-    
-    private void PrintAll()
+
+    [PyFunction("floor")]
+    private double FloorToInt(Interpreter interpreter, PyNumber x)
     {
-        foreach (var variable in GameObject.FindObjectsOfType<Transform>())
-        {
-            if (variable.parent == null)
-                variable.PrintDeeper();
-        }
+        var result = Mathf.FloorToInt((float)x.num);
+        interpreter.State.ReturnValue = new PyNumber(result);
+        return interpreter.GetOpCount(NodeType.Expr);
     }
 }

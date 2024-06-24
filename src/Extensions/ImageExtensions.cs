@@ -1,14 +1,18 @@
 using System;
-using JetBrains.Annotations;
-using ModHelper.API;
+using BepInEx;
+using ModHelper.Helpers;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace ModHelper.Extensions;
 
+/// <summary>
+/// Class helping for everything concerning images
+/// </summary>
 public static class ImageExtensions
 {
-    public static void LoadSprite<T>(this Image image, string name, float size, float pixelsPerUnit = 100) where T : FarmPlugin
+    /// <inheritdoc cref="ImageExtensions.LoadSprite{T}(Image, string, Rect, Vector2, float)"/>
+    public static void LoadSprite<T>(this Image image, string name, float size, float pixelsPerUnit = 100) where T : BaseUnityPlugin
         => image.LoadSprite<T>(name, new Rect(Vector2.zero,Vector2.one * size), Vector2.zero, pixelsPerUnit);
 
     /// <summary>
@@ -25,8 +29,7 @@ public static class ImageExtensions
         Rect rect,
         Vector2 pivot,
         float pixelsPerUnit
-    ) where T: FarmPlugin
-    {
+    ) where T : BaseUnityPlugin {
         name = $"{typeof(T).Namespace}.{name}";
         var t = GetTexture<T>(name);
 
@@ -44,7 +47,7 @@ public static class ImageExtensions
         {
             rect.height = Math.Min(t.height, rect.height);
             rect.width = Math.Min(t.width, rect.width);
-            FarmPlugin.Warning<ModHelperPlugin>($"Resized rect to fit: {rect.height}x{rect.width}");
+            Log.Warning<ModHelperPlugin>($"Resized rect to fit: {rect.height}x{rect.width}");
         }
        
         // Create sprite
@@ -56,8 +59,7 @@ public static class ImageExtensions
         );
     }
 
-    [CanBeNull]
-    private static Texture2D GetTexture<T>(string name) where T : FarmPlugin
+    private static Texture2D GetTexture<T>(string name) where T : BaseUnityPlugin
     {
         // Read bytes
         var stream = System.Reflection.Assembly.GetAssembly(typeof(T)).GetManifestResourceStream(name);
