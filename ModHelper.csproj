@@ -74,24 +74,22 @@
     </ItemGroup>
     
     <ItemGroup>
+      <Compile Include="src\API\Constants.cs" />
       <Compile Include="src\API\FarmInfoAttribute.cs" />
       <Compile Include="src\API\PluginsPage.cs" />
       <Compile Include="src\API\PyFunctionAttribute.cs" />
-      <Compile Include="src\Constants.cs" />
       <Compile Include="src\Extensions\ColoredButtonExtensions.cs" />
       <Compile Include="src\Extensions\DebugExtensions.cs" />
       <Compile Include="src\Extensions\ImageExtensions.cs" />
       <Compile Include="src\Extensions\GameObjectExtensions.cs" />
-      <Compile Include="src\Helpers\CodeHelper.cs" />
+      <Compile Include="src\Helpers\ColorHelper.cs" />
       <Compile Include="src\Helpers\Log.cs" />
       <Compile Include="src\Helpers\PluginHelper.cs" />
+      <Compile Include="src\Helpers\FuncHelper.cs" />
       <Compile Include="src\Helpers\ReflectionHelper.cs" />
       <Compile Include="src\Helpers\UiHelper.cs" />
+      <Compile Include="src\ModHelperFunctions.cs" />
       <Compile Include="src\ModHelperPlugin.cs" />
-    </ItemGroup>
-    
-    <ItemGroup>
-      <Folder Include="src\Patches\" />
     </ItemGroup>
 
   <Import Project="..\farmer.targets" />

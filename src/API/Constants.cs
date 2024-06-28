@@ -1,4 +1,6 @@
-﻿#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+﻿using System.Reflection;
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 namespace ModHelper;
 
 /// <summary>
@@ -13,5 +15,12 @@ public static class Constants
     // --- PATHS ---
     public const string TITLE_PATH = "OverlayUI/MenuCanvas/Menu/TitlePage";
     public const string SAVE_CHOOSER_PATH = "OverlayUI/MenuCanvas/Menu/SaveChooser";
+    // ---
+    
+    // --- FLAGS ---
+    public const BindingFlags INSTANCE_FLAGS = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance;
+    public const BindingFlags STATIC_FLAGS = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static;
+    
+    public const BindingFlags ALL_FLAGS = INSTANCE_FLAGS | STATIC_FLAGS;
     // ---
 }

@@ -14,7 +14,7 @@ namespace ModHelper;
 [FarmInfo("WarperSan")]
 public class ModHelperPlugin : BaseUnityPlugin
 {
-    private void OnAwake()
+    private void Awake()
     {
         var harmony = new Harmony(Info.Metadata.GUID);
         harmony.PatchAll();
@@ -26,25 +26,22 @@ public class ModHelperPlugin : BaseUnityPlugin
         PluginsPage.Create();
         
         //PrintAll();
-        CodeHelper.AddFunction(Pow);
-        CodeHelper.AddFunction(FloorToInt);
-        //CodeHelper.AddCodeColor(@"intFloor(?=\(.*?\))", "#33b5aa", true);
-        //CodeHelper.AddCodeColor(@"pow(?=\(.*?\))", "#33b5aa", true);
+        FuncHelper.AddAll<ModHelperFunctions>();
+        
+        //ColorHelper.Add(@"floor(?=\(.*?)", "#33b5aa", true);
+        //ColorHelper.Add(@"pow(?=\(.*?)", "#33b5aa", true);
+        //ColorHelper.Add(@"round(?=\(.*?)", "#33b5aa", true);
+
+        // typeof(Localizer).GetStaticField<Dictionary<string, string>>("language")
+        //     .Add("code_tooltip_pow", test);
     }
 
-    [PyFunction("pow")]
-    private double Pow(Interpreter interpreter, PyNumber a, PyNumber b)
+    private void Update()
     {
-        var result = Mathf.Pow((float)a.num, (float)b.num);
-        interpreter.State.ReturnValue = new PyNumber(result);
-        return interpreter.GetOpCount(NodeType.Expr);
-    }
-
-    [PyFunction("floor")]
-    private double FloorToInt(Interpreter interpreter, PyNumber x)
-    {
-        var result = Mathf.FloorToInt((float)x.num);
-        interpreter.State.ReturnValue = new PyNumber(result);
-        return interpreter.GetOpCount(NodeType.Expr);
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            Saver.Inst.mainFarm.leaderboardManager.StartLeaderboardRun();
+            Saver.Inst.mainFarm.leaderboardManager.StopLeaderboardRun(false);
+        }
     }
 }

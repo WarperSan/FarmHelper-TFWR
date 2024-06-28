@@ -8,11 +8,6 @@ namespace ModHelper.Helpers;
 /// </summary>
 public static class ReflectionHelper
 {
-    private const BindingFlags INSTANCE_FLAGS = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance;
-    private const BindingFlags STATIC_FLAGS = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static;
-    
-    private const BindingFlags ALL_FLAGS = INSTANCE_FLAGS | STATIC_FLAGS;
-    
     #region Fields
 
     /// <summary>
@@ -23,7 +18,7 @@ public static class ReflectionHelper
     /// <typeparam name="U">Type of the field</typeparam>
     /// <returns>Value of the field</returns>
     public static U GetField<U>(this object instance, string name)
-        => GetField<U>(instance.GetType(), instance, name, INSTANCE_FLAGS);
+        => GetField<U>(instance.GetType(), instance, name, Constants.INSTANCE_FLAGS);
 
     /// <summary>
     /// Fetches the value of the given static field for this class
@@ -33,7 +28,7 @@ public static class ReflectionHelper
     /// <typeparam name="U">Type of the field</typeparam>
     /// <returns>Value of the field</returns>
     public static U GetStaticField<U>(this Type type, string name) 
-        => GetField<U>(type, null, name, STATIC_FLAGS);
+        => GetField<U>(type, null, name, Constants.STATIC_FLAGS);
     
     private static U GetField<U>(Type type, object instance, string name, BindingFlags flags) 
         => (U) type.GetField(name, flags)?.GetValue(instance);
@@ -50,7 +45,7 @@ public static class ReflectionHelper
     /// <typeparam name="U">Type of the property</typeparam>
     /// <returns>Value of the property</returns>
     public static U GetProperty<U>(this object instance, string name)
-        => GetProperty<U>(instance.GetType(), instance, name, INSTANCE_FLAGS);
+        => GetProperty<U>(instance.GetType(), instance, name, Constants.INSTANCE_FLAGS);
 
     /// <summary>
     /// Fetches the value of the given static property for this class
@@ -60,7 +55,7 @@ public static class ReflectionHelper
     /// <typeparam name="U">Type of the property</typeparam>
     /// <returns>Value of the property</returns>
     public static U GetProperty<U>(this Type type, string name) 
-        => GetProperty<U>(type, null, name, STATIC_FLAGS);
+        => GetProperty<U>(type, null, name, Constants.STATIC_FLAGS);
     
     private static U GetProperty<U>(Type type, object instance, string name, BindingFlags flags) 
         => (U) type.GetProperty(name, flags)?.GetValue(instance);
@@ -78,7 +73,7 @@ public static class ReflectionHelper
     /// <typeparam name="U">Type of the return value</typeparam>
     /// <returns>Return value</returns>
     public static U CallMethod<U>(this object instance, string name, params object[] parameters) where U : class
-        => CallMethod<U>(instance.GetType(), instance, name, ALL_FLAGS, parameters);
+        => CallMethod<U>(instance.GetType(), instance, name, Constants.ALL_FLAGS, parameters);
     
     /// <inheritdoc cref="CallMethod{U}(Type, object, string, BindingFlags, object[])"/>
     public static void CallMethod(this object instance, string name, params object[] parameters) 
