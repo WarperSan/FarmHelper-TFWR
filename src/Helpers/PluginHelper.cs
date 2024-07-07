@@ -16,7 +16,7 @@ public static class PluginHelper
     /// <returns>The list of all the plugins</returns>
     public static IEnumerable<BaseUnityPlugin> GetPlugins() => Chainloader.PluginInfos
         .Select(pi => pi.Value.Instance)
-        .Where(p => p != null);
+        .Where(p => p?.Info != null);
 
     /// <summary>
     /// Fetches the instance of the plugin of the given type.

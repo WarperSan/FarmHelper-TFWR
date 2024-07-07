@@ -1,30 +1,30 @@
-﻿using ModHelper.API;
-using UnityEngine;
+﻿using System;
+using ModHelper.API.Attributes;
 
 namespace ModHelper;
 
 internal class ModHelperFunctions
 {
-    [PyFunction("pow")]
+    [PyFunction("pow", "#33b5aa")]
     private static double Pow(Interpreter interpreter, PyNumber a, PyNumber b)
     {
-        var result = Mathf.Pow((float)a, (float)b);
+        var result = Math.Pow(a, b);
         interpreter.State.ReturnValue = new PyNumber(result);
         return interpreter.GetOpCount(NodeType.Expr);
     }
 
-    [PyFunction("floor")]
+    [PyFunction("floor", "#33b5aa")]
     private static double Floor(Interpreter interpreter, PyNumber x)
     {
-        var result = Mathf.FloorToInt((float)x);
+        var result = Math.Floor(x);
         interpreter.State.ReturnValue = new PyNumber(result);
         return interpreter.GetOpCount(NodeType.Expr);
     }
 
-    [PyFunction("round")]
+    [PyFunction("round", "#33b5aa")]
     private static double Round(Interpreter interpreter, PyNumber x)
     {
-        var result = Mathf.Round((float)x);
+        var result = Math.Round(x);
         interpreter.State.ReturnValue = new PyNumber(result);
         return interpreter.GetOpCount(NodeType.Expr);
     }

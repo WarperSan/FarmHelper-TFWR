@@ -74,14 +74,16 @@
     </ItemGroup>
     
     <ItemGroup>
+      <Compile Include="src\API\Attributes\FarmInfoAttribute.cs" />
+      <Compile Include="src\API\Attributes\PyFunctionAttribute.cs" />
       <Compile Include="src\API\Constants.cs" />
-      <Compile Include="src\API\FarmInfoAttribute.cs" />
-      <Compile Include="src\API\PluginsPage.cs" />
-      <Compile Include="src\API\PyFunctionAttribute.cs" />
+      <Compile Include="src\API\UI\DefaultPage.cs" />
+      <Compile Include="src\API\UI\PluginsPage.cs" />
       <Compile Include="src\Extensions\ColoredButtonExtensions.cs" />
       <Compile Include="src\Extensions\DebugExtensions.cs" />
       <Compile Include="src\Extensions\ImageExtensions.cs" />
       <Compile Include="src\Extensions\GameObjectExtensions.cs" />
+      <Compile Include="src\Extensions\PluginExtensions.cs" />
       <Compile Include="src\Helpers\ColorHelper.cs" />
       <Compile Include="src\Helpers\Log.cs" />
       <Compile Include="src\Helpers\PluginHelper.cs" />
