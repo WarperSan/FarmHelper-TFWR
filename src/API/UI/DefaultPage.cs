@@ -19,9 +19,6 @@ public static class DefaultPage
     /// <param name="plugin"></param>
     /// <param name="farmInfo"></param>
     /// <param name="page"></param>
-    /// <remarks>
-    /// If <see cref="FarmInfoAttribute.PluginPageCallback"/> is not valid, a plugin will fallback onto this
-    /// </remarks>
     public static void Create(BaseUnityPlugin plugin, FarmInfoAttribute farmInfo, GameObject page)
     {
         var group = page.AddComponent<HorizontalLayoutGroup>();

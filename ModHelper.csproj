@@ -67,6 +67,9 @@
       <Reference Include="System.Xml.Linq">
         <HintPath>..\..\..\SteamLibrary\steamapps\common\The Farmer Was Replaced\TheFarmerWasReplaced_Data\Managed\System.Xml.Linq.dll</HintPath>
       </Reference>
+      <Reference Include="UnityEngine.AssetBundleModule">
+        <HintPath>..\..\SteamLibrary\steamapps\common\The Farmer Was Replaced\TheFarmerWasReplaced_Data\Managed\UnityEngine.AssetBundleModule.dll</HintPath>
+      </Reference>
     </ItemGroup>
     
     <ItemGroup>
@@ -85,6 +88,7 @@
       <Compile Include="src\Extensions\GameObjectExtensions.cs" />
       <Compile Include="src\Extensions\PluginExtensions.cs" />
       <Compile Include="src\Helpers\ColorHelper.cs" />
+      <Compile Include="src\Helpers\LocalizerHelper.cs" />
       <Compile Include="src\Helpers\Log.cs" />
       <Compile Include="src\Helpers\PluginHelper.cs" />
       <Compile Include="src\Helpers\FuncHelper.cs" />
@@ -92,6 +96,10 @@
       <Compile Include="src\Helpers\UiHelper.cs" />
       <Compile Include="src\ModHelperFunctions.cs" />
       <Compile Include="src\ModHelperPlugin.cs" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <None Remove="Resources\Lotus_000.fbx" />
     </ItemGroup>
 
   <Import Project="..\farmer.targets" />

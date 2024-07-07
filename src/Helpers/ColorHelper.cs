@@ -7,7 +7,7 @@ namespace ModHelper.Helpers;
 /// <summary>
 /// Class helping to add syntax colors to the game
 /// </summary>
-public class ColorHelper
+public static class ColorHelper
 {
     /// <summary>
     /// Adds a syntax color to the game
