@@ -2,6 +2,7 @@
 using HarmonyLib;
 using ModHelper.API.Attributes;
 using ModHelper.API.UI;
+using ModHelper.Helpers;
 using ModHelper.UI;
 
 // ReSharper disable StringLiteralTypo
@@ -24,6 +25,7 @@ public class ModHelperPlugin : BaseUnityPlugin
 
     private void Start()
     {
+        FuncHelper.AddAll<ModHelperFunctions>();
         PluginMenu.Create<PluginListMenu>();
         PluginMenu.Create<TitleMenu>().Open();
     }

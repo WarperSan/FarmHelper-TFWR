@@ -1,9 +1,7 @@
-﻿using System;
-using ModHelper.Helpers;
+﻿using ModHelper.Helpers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Object = UnityEngine.Object;
 
 namespace ModHelper.Extensions;
 
@@ -37,6 +35,12 @@ public static class UiExtensions
         => parent.Add("ScrollView").GetComponent<ScrollRect>();
 
     /// <summary>
+    /// Adds a button prefab to this parent
+    /// </summary>
+    public static ColoredButton AddButton(this Transform parent)
+        => parent.Add("Button").GetComponent<ColoredButton>();
+
+    /// <summary>
     /// Fetches the requested asset and creates a copy
     /// </summary>
     private static GameObject Add(this Transform parent, string name)
@@ -44,7 +48,7 @@ public static class UiExtensions
         var asset = AssetHelper<ModHelperPlugin>.LoadAsset<GameObject>(API.Resource.GetBundle("uibundle.assets"), name);
 
         if (asset == null)
-            throw new NullReferenceException($"No asset named '{name}' was found.");
+            throw new System.NullReferenceException($"No asset named '{name}' was found.");
         
         return Object.Instantiate(asset, parent);
     }
