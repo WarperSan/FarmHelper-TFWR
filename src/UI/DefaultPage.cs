@@ -72,15 +72,10 @@ public static class DefaultPage
         {
             toggleBtn.SetListener(() =>
             {
-                toggleImage.LoadSprite<ModHelperPlugin>(
-                    toggleImage.sprite.texture.name.Contains("disable")
-                        ? "Resources.icon-enable.png"
-                        : "Resources.icon-disable.png", 50);
-                
-                Log.Info<ModHelperPlugin>(plugin.Info.Location);
-                // System.IO.File.Move(
-                //     BepInEx.Paths.PluginPath + "/" +  
-                //     );
+                // toggleImage.LoadSprite<ModHelperPlugin>(
+                //     toggleImage.sprite.texture.name.Contains("disable")
+                //         ? Resource.GetImage("icon-enable.png")
+                //         : Resource.GetImage("icon-disable.png"), 50);
             });
         }
     }
@@ -99,7 +94,7 @@ public static class DefaultPage
     
         // Set image
         link.Find("Image").GetComponent<Image>()
-            .LoadSprite<ModHelperPlugin>("Resources.icon-link.png", 64);
+            .LoadSprite<ModHelperPlugin>(Resource.GetImage("icon-link.png"), 64);
 
         // Set button click
         if (link.TryGetComponent(out ColoredButton linkBtn))

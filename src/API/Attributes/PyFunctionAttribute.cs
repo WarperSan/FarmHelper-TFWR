@@ -20,14 +20,10 @@ public class PyFunctionAttribute : Attribute
 
     /// <inheritdoc cref="PyFunctionAttribute"/>
     /// <param name="name">Name of the function to call in-game</param>
-    public PyFunctionAttribute(string name)
+    /// <param name="color">Color of the function</param>
+    public PyFunctionAttribute(string name, string color = null)
     {
         Name = name;
-    }
-    
-    /// <inheritdoc cref="PyFunctionAttribute(string)"/>
-    public PyFunctionAttribute(string name, string color) : this(name)
-    {
         Color = color;
     }
 }

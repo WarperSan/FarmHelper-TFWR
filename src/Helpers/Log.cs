@@ -10,25 +10,10 @@ public static class Log
 {
     private static void LogSelf<T>(object data, LogLevel level) where T : BaseUnityPlugin
     {
-        // Fetch plugin
-        var plugin = PluginHelper.GetPlugin<T>();
-
-        if (plugin == null)
-        {
-            BepInEx.Logging.Logger.CreateLogSource(typeof(T).Name).LogWarning($"No plugin found for the type '{typeof(T)}'.");
-            return;
-        }
-        
-        // Fetch logger
-        var logger = plugin.GetProperty<ManualLogSource>("Logger");
-
-        if (logger == null)
-        {
-            BepInEx.Logging.Logger.CreateLogSource(typeof(T).Name).LogWarning($"No logger found for the plugin of the type '{typeof(T)}'.");
-            return;
-        }
-        
         // Log
+        var plugin = (BaseUnityPlugin) PluginHelper.GetPlugin<T>();
+        var logger = plugin?.Logger ?? BepInEx.Logging.Logger.CreateLogSource(typeof(T).Name);
+        
         logger.Log(level, data ?? "null");
     }
 

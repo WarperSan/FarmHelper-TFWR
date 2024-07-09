@@ -32,7 +32,7 @@ public static class FuncHelper
         }
 
         // Unlocks the function
-        Saver.Inst.mainFarm.GetField<HashSet<string>>("unlocks").Add(name.ToLower());
+        Saver.Inst.mainFarm.unlocks.Add(name.ToLower());
         return true;
     }
     
@@ -77,8 +77,7 @@ public static class FuncHelper
         bool success = Add(codeName, (interpreter, @params) =>
         {
             // Check for params
-            interpreter.bf.CallMethod("CorrectParams", 
-                @params, 
+            interpreter.bf.CorrectParams(@params, 
                 paramTypes,
                 codeName
             );

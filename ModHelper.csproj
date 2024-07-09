@@ -80,26 +80,41 @@
       <Compile Include="src\API\Attributes\FarmInfoAttribute.cs" />
       <Compile Include="src\API\Attributes\PyFunctionAttribute.cs" />
       <Compile Include="src\API\Constants.cs" />
-      <Compile Include="src\API\UI\DefaultPage.cs" />
-      <Compile Include="src\API\UI\PluginsPage.cs" />
+      <Compile Include="src\API\AssemblyLoader.cs" />
+      <Compile Include="src\API\Resource.cs" />
+      <Compile Include="src\API\UI\PluginMenu.cs" />
       <Compile Include="src\Extensions\ColoredButtonExtensions.cs" />
       <Compile Include="src\Extensions\DebugExtensions.cs" />
       <Compile Include="src\Extensions\ImageExtensions.cs" />
       <Compile Include="src\Extensions\GameObjectExtensions.cs" />
       <Compile Include="src\Extensions\PluginExtensions.cs" />
+      <Compile Include="src\Extensions\UiExtensions.cs" />
+      <Compile Include="src\Helpers\AssetHelper.cs" />
       <Compile Include="src\Helpers\ColorHelper.cs" />
       <Compile Include="src\Helpers\LocalizerHelper.cs" />
       <Compile Include="src\Helpers\Log.cs" />
       <Compile Include="src\Helpers\PluginHelper.cs" />
       <Compile Include="src\Helpers\FuncHelper.cs" />
-      <Compile Include="src\Helpers\ReflectionHelper.cs" />
       <Compile Include="src\Helpers\UiHelper.cs" />
       <Compile Include="src\ModHelperFunctions.cs" />
       <Compile Include="src\ModHelperPlugin.cs" />
+      <Compile Include="src\Patches\Menu_Patches.cs" />
+      <Compile Include="src\UI\DefaultPage.cs" />
+      <Compile Include="src\UI\PluginListMenu.cs" />
+      <Compile Include="src\UI\TitleMenu.cs" />
     </ItemGroup>
     
     <ItemGroup>
       <None Remove="Resources\Lotus_000.fbx" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <None Remove="Resources\DLL\Octokit.dll" />
+      <EmbeddedResource Include="Resources\DLL\Octokit.dll" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <PackageReference Include="Octokit" Version="13.0.1" />
     </ItemGroup>
 
   <Import Project="..\farmer.targets" />

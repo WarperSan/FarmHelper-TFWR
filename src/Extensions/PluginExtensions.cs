@@ -11,7 +11,7 @@ namespace ModHelper.Extensions;
 /// </summary>
 public static class PluginExtensions
 {
-    public static void CreatePage(this BaseUnityPlugin plugin, GameObject pluginUI)
+    internal static void CreatePage(this BaseUnityPlugin plugin, GameObject pluginUI)
     {
         // Create specific page
         var info = plugin.GetType().GetCustomAttribute<FarmInfoAttribute>();

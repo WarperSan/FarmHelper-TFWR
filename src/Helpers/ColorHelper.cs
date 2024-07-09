@@ -29,11 +29,9 @@ public static class ColorHelper
         }
         
         // Add to colors
-        var colors = typeof(CodeUtilities).GetStaticField<List<(Regex, string)>>("colors");
-        
         // Never add before comments
-        colors.Insert(
-            fromStart ? System.Math.Min(colors.Count, 1) : colors.Count,
+        CodeUtilities.colors.Insert(
+            fromStart ? System.Math.Min(CodeUtilities.colors.Count, 1) : CodeUtilities.colors.Count,
             (new Regex(pattern), color)
         );
         
