@@ -1,10 +1,10 @@
 using System;
 using BepInEx;
-using ModHelper.Helpers;
+using FarmHelper.Helpers;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ModHelper.Extensions;
+namespace FarmHelper.Extensions;
 
 /// <summary>
 /// Class helping for everything concerning images
@@ -47,7 +47,7 @@ public static class ImageExtensions
         {
             rect.height = Math.Min(t.height, rect.height);
             rect.width = Math.Min(t.width, rect.width);
-            Log.Warning<ModHelperPlugin>($"Resized rect to fit: {rect.height}x{rect.width}");
+            Log.Warning<FarmHelperPlugin>($"Resized rect to fit: {rect.height}x{rect.width}");
         }
        
         // Create sprite

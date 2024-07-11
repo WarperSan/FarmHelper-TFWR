@@ -3,7 +3,7 @@ using System.Linq;
 using BepInEx;
 using BepInEx.Bootstrap;
 
-namespace ModHelper.Helpers;
+namespace FarmHelper.Helpers;
 
 /// <summary>
 /// Class helping for Plugins

@@ -1,9 +1,9 @@
 ﻿using System;
 
-namespace ModHelper.API.Attributes;
+namespace FarmHelper.API.Attributes;
 
 /// <summary>
-/// Information useful for ModHelper
+/// Information useful for FarmHelper
 /// </summary>
 [AttributeUsage(AttributeTargets.Class)]
 public class FarmInfoAttribute : Attribute
@@ -19,7 +19,7 @@ public class FarmInfoAttribute : Attribute
     public string Url { get; }
 
     /// <summary>
-    /// Informs ModHelper on certain information for this plugin
+    /// Informs FarmHelper on certain information for this plugin
     /// </summary>
     /// <param name="author">Name of the author of this plugin</param>
     /// <param name="url">URL of the page of this plugin</param>

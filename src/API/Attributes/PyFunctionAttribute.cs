@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ModHelper.API.Attributes;
+namespace FarmHelper.API.Attributes;
 
 /// <summary>
 /// Attribute marking every function that should be added as a built-in function

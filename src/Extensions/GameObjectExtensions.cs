@@ -1,7 +1,6 @@
-﻿using JetBrains.Annotations;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace ModHelper.Extensions;
+namespace FarmHelper.Extensions;
 
 /// <summary>
 /// Extension methods for GameObject

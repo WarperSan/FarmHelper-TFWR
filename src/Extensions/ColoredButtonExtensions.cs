@@ -1,7 +1,8 @@
-﻿using UnityEngine.Events;
+﻿using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
-namespace ModHelper.Extensions;
+namespace FarmHelper.Extensions;
 
 /// <summary>
 /// Extensions methods for <see cref="ColoredButton"/>
@@ -21,4 +22,13 @@ public static class ColoredButtonExtensions
         // Add click event
         button.OnClick.AddListener(callback);
     }
+
+    /// <summary>
+    /// Gets the icon of this button
+    /// </summary>
+    /// <remarks>
+    /// This only works for the buttons created from <see cref="UiExtensions.AddButton(Transform)"/>
+    /// </remarks>
+    public static Image GetIcon(this ColoredButton button) 
+        => button.transform.Find("Panel/Image")?.GetComponent<Image>();
 }

@@ -1,7 +1,7 @@
 ﻿using BepInEx;
 using BepInEx.Logging;
 
-namespace ModHelper.Helpers;
+namespace FarmHelper.Helpers;
 
 /// <summary>
 /// Class helping for logging stuff

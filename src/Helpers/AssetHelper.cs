@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace ModHelper.Helpers;
+namespace FarmHelper.Helpers;
 
 internal static class AssetHelper
 {

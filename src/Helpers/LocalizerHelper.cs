@@ -1,4 +1,4 @@
-﻿namespace ModHelper.Helpers;
+﻿namespace FarmHelper.Helpers;
 
 /// <summary>
 /// Class helping to add texts to the game

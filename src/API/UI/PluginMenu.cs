@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
-namespace ModHelper.API.UI;
+namespace FarmHelper.API.UI;
 
 public abstract class PluginMenu : MonoBehaviour
 {
@@ -13,23 +14,34 @@ public abstract class PluginMenu : MonoBehaviour
     private static readonly List<(Type, PluginMenu)> menus = [];
     private static readonly Stack<PluginMenu> history = new();
 
-    private static T GetInstance<T>() where T : PluginMenu 
+    public static T GetInstance<T>() where T : PluginMenu 
         => menus.FirstOrDefault(menu => menu.Item2 is T).Item2 as T;
-    
+
+    public static PluginMenu GetPrevious() 
+        => history.TryPeek(out PluginMenu menu) ? menu : null;
+
     #endregion
     #region Create
 
     /// <summary>
     /// Creates an instance of the given menu
     /// </summary>
-    /// <returns>Created menu</returns>
+    /// <returns>Created menu or null if an error occurred</returns>
     public static T Create<T>() where T : PluginMenu
     {
         GameObject gameObject = new GameObject(typeof(T).FullName);
+        DontDestroyOnLoad(gameObject);
         
         T menu = gameObject.AddComponent<T>();
         
         menu.root = menu.Create();
+
+        if (menu.root == null)
+        {
+            Destroy(gameObject);
+            return null;
+        }
+        
         menu.SetActive(false);
         menus.Add((typeof(T), menu));
 
@@ -45,7 +57,7 @@ public abstract class PluginMenu : MonoBehaviour
 
     private void SetActive(bool isActive)
     {
-        root?.SetActive(isActive);
+        root.SetActive(isActive);
         gameObject.SetActive(isActive);
     }
 
@@ -56,10 +68,10 @@ public abstract class PluginMenu : MonoBehaviour
     
     public void Open()
     {
-        if (history.TryPeek(out PluginMenu menu))
-            menu.SetActive(false);
-        
         SetActive(true);
+
+        GetPrevious()?.SetActive(false);
+        
         history.Push(this);
     }
 
@@ -71,19 +83,25 @@ public abstract class PluginMenu : MonoBehaviour
     public static void CloseAll()
     {
         while (history.Count > 0)
-            history.Peek().Close();
+            GetPrevious()?.Close();
     }
     
     public void Close()
     {
         SetActive(false);
-        
-        if (history.TryPeek(out PluginMenu menu) && menu == this)
+
+        var prev = GetPrevious();
+
+        if (prev == this)
             history.Pop();
         
-        if (history.TryPeek(out PluginMenu prev))
-            prev.SetActive(true);
+        GetPrevious()?.SetActive(true);
     }
     
+    #endregion
+    #region Info
+
+    public abstract string DisplayName { get; }
+
     #endregion
 }

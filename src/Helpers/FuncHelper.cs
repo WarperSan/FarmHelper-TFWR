@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using ModHelper.API.Attributes;
+using FarmHelper.API;
+using FarmHelper.API.Attributes;
 
-namespace ModHelper.Helpers;
+namespace FarmHelper.Helpers;
 
 /// <summary>
 /// Class helping to add built-in functions to the game
@@ -27,7 +28,7 @@ public static class FuncHelper
         // If name already used, skip
         if (!functions.TryAdd(name, callback))
         {
-            Log.Info<ModHelperPlugin>($"A function named '{name}' already existed.");
+            Log.Info<FarmHelperPlugin>($"A function named '{name}' already existed.");
             return false; 
         }
 
@@ -65,7 +66,7 @@ public static class FuncHelper
         // Must have PyFunctionAttribute
         if (attr == null)
         {
-            Log.Warning<ModHelperPlugin>($"'{info.Name}' does not contain the attribute '{nameof(PyFunctionAttribute)}'.");
+            Log.Warning<FarmHelperPlugin>($"'{info.Name}' does not contain the attribute '{nameof(PyFunctionAttribute)}'.");
             return false;
         }
         

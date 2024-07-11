@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using FarmHelper.API;
+using UnityEngine;
 
-namespace ModHelper.Helpers;
+namespace FarmHelper.Helpers;
 
 /// <summary>
 /// Class helping for UI elements

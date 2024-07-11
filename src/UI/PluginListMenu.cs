@@ -1,111 +1,122 @@
 ﻿using System.Linq;
+using System.Reflection;
 using BepInEx;
-using ModHelper.API.UI;
-using ModHelper.Extensions;
-using ModHelper.Helpers;
+using FarmHelper.API;
+using FarmHelper.API.Attributes;
+using FarmHelper.API.Interfaces;
+using FarmHelper.API.UI;
+using FarmHelper.Extensions;
+using FarmHelper.Helpers;
 using UnityEngine;
 using UnityEngine.UI;
+
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
-namespace ModHelper;
+namespace FarmHelper.UI;
 
 public class PluginListMenu : PluginMenu
 {
     /// <inheritdoc />
+    public override string DisplayName => "Plugin List";
+
+    /// <inheritdoc />
     protected override GameObject Create()
     {
-        var menu = GameObject.Find(Constants.SAVE_CHOOSER_PATH).Clone();
-        SetUpPage(menu);
+        var parent = GameObject.Find(Constants.MENU_PATH);
+        
+        var menu = CreateMenu(parent.transform);
         
         var plugins = PluginHelper.GetPlugins()
             .OrderBy(x => x.Info.Metadata.Name).ToArray();
         
-        // Add navigation
-        if (!AddNavigation(menu, plugins.Length))
+        // Add title button
+        if (!AddTitleButton(menu, plugins.Length))
+        {
+            Destroy(menu);
             return null;
+        }
         
         // Add pages
-        var container = menu.transform.Find("Scroll View/Viewport/Content");
         foreach (var plugin in plugins)
-            AddPluginPage(plugin, container);
-
+            AddPluginPage(plugin, pluginList.content);
+        
         return menu;
     }
 
-    private GameObject GetPrefab()
+    #region Menu UI
+
+    private ScrollRect pluginList;
+
+    private GameObject CreateMenu(Transform parent)
     {
-        var saveChooser = GameObject.Find(Constants.SAVE_CHOOSER_PATH).GetComponent<SaveChooser>();
+        var menu = parent.AddPanel();
+        menu.SetActive(true); // For Layout
 
-        return saveChooser.saveOptionPrefab.gameObject;
-    }
-
-    private static void SetUpPage(GameObject page)
-    {
-        page.name = "ModsPage";
-        page.RemoveComponent<SaveChooser>();
-
-        // Destroy extra UI
-        Object.Destroy(page.transform.Find("Scroll View/NewGameButton").gameObject);
-        Object.Destroy(page.transform.Find("Scroll View/OpenFolderButton").gameObject);
+        // Name
+        menu.name = "PluginListMenu";
         
-        // Cover 90% of the screen
-        var rect = page.GetComponent<RectTransform>();
-        rect.offsetMin = Vector2.zero;
-        rect.offsetMax = Vector2.zero;
-        rect.anchorMin = Vector2.one * 0.05f;
-        rect.anchorMax = Vector2.one * 0.95f;
-        
-        // Set spacing
-        page.transform.Find("Scroll View/Viewport/Content").GetComponent<VerticalLayoutGroup>().spacing = 4;
-    }
+        // Back button
+        var backBtn = menu.AddButton();
+        backBtn.GetIcon().gameObject.SetActive(false);
+        backBtn.Text = "Back";
+        backBtn.nameText.fontSize *= 0.5f;
+        backBtn.SetListener(Close);
 
-    private bool AddNavigation(GameObject menu, int count)
+        var backRect = backBtn.GetComponent<RectTransform>();
+        backRect.anchorMin = new Vector2(0.01f, 1);
+        backRect.anchorMax = new Vector2(1, 0.99f);
+        
+        // Scroll view
+        pluginList = menu.AddScrollView();
+        
+        var group = pluginList.content.GetComponent<VerticalLayoutGroup>();
+        group.spacing = 4;
+        group.childControlHeight = false;
+        group.childScaleHeight = true;
+        
+        var listRect = pluginList.GetComponent<RectTransform>();
+        listRect.anchorMin = new Vector2(0.02f, 0.02f);
+        listRect.anchorMax = new Vector2(0.98f, 0.90f);
+        pluginList.GetComponent<Image>().color = new Color(45f / 255, 45f / 255, 45f / 255, 93f / 255);
+        
+        return menu;
+    }
+    
+    private bool AddTitleButton(GameObject menu, int count)
     {
         // Add button
         if (!UiHelper.AddTitleButton(1, 3, out var pluginsBtn))
         {
-            Log.Warning<ModHelperPlugin>($"Could not create the title button for {nameof(PluginListMenu)}.");
-            Object.Destroy(menu);
+            Log.Warning<FarmHelperPlugin>($"Could not create the title button for {nameof(PluginListMenu)}.");
             return false;
         }
-
+        
         pluginsBtn.name = "PluginsBtn";
         pluginsBtn.Text = $"Plugins ({count})";
         pluginsBtn.SetListener(Open);
         
-        // Close when back clicked
-        menu.transform.Find("Scroll View/BackButton").GetComponent<ColoredButton>().SetListener(Close);
-        
         return true;
-    }
-    private void SetActive(bool isActive)
-    {
-        // ColoredButton btn = modsPage.transform.Find("Scroll View/BackButton")
-        //     .GetComponent<ColoredButton>();
-        // btn.pressed = false;
-        // btn.hovered = false;
-        // btn.CallMethod("UpdateColor");
-        
-        //pluginsPage.SetActive(isActive);
-        UiHelper.SetActiveTitle(!isActive);
     }
 
     private void AddPluginPage(BaseUnityPlugin plugin, Transform parent)
     {
-        // Check for prefab
-        var prefab = GetPrefab();
-
-        if (prefab == null)
-        {
-            Log.Error<ModHelperPlugin>("Prefab for a plugin page was not found.");
-            return;
-        }
+        var pluginUI = parent.AddPanel();
+        pluginUI.name = $"PluginPage - {plugin.Info.Metadata.GUID}";
         
-        // Create and clean
-        var pluginUI = Object.Instantiate(prefab, parent, false);
-        pluginUI.name = $"PluginUI - {plugin.Info.Metadata.GUID}";
-        pluginUI.RemoveComponent<SaveOption>();
+        // Create specific page
+        var farmInfo = plugin.GetType().GetCustomAttribute<FarmInfoAttribute>();
 
-        plugin.CreatePage(pluginUI);
+        // Use callback or default
+        // ReSharper disable once SuspiciousTypeConversion.Global
+        if (plugin is IPageCallback page)
+            page.CreatePage(farmInfo, pluginUI);
+        else
+            plugin.CreateDefault(farmInfo, pluginUI);
+        
+        // Update all layout
+        LayoutRebuilder.ForceRebuildLayoutImmediate(pluginUI.GetComponent<RectTransform>());
+        LayoutRebuilder.ForceRebuildLayoutImmediate(pluginUI.GetComponent<RectTransform>());
     }
+
+    #endregion
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace ModHelper.API;
+namespace FarmHelper.API;
 
 internal static class AssemblyLoader
 {

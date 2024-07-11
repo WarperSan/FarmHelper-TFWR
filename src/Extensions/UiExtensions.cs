@@ -1,9 +1,9 @@
-﻿using ModHelper.Helpers;
+﻿using FarmHelper.Helpers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ModHelper.Extensions;
+namespace FarmHelper.Extensions;
 
 /// <summary>
 /// Class helping for creating UI
@@ -13,43 +13,50 @@ public static class UiExtensions
     /// <summary>
     /// Adds an input field prefab to this parent
     /// </summary>
-    public static TMP_InputField AddInputField(this Transform parent) 
+    public static TMP_InputField AddInputField(this Object parent) 
         => parent.Add("InputField").GetComponent<TMP_InputField>();
     
     /// <summary>
     /// Adds a panel prefab to this parent
     /// </summary>
-    public static GameObject AddPanel(this Transform parent) 
+    public static GameObject AddPanel(this Object parent) 
         => parent.Add("Panel");
 
     /// <summary>
     /// Adds a scrollbar prefab to this parent
     /// </summary>
-    public static Scrollbar AddScrollbar(this Transform parent) 
+    public static Scrollbar AddScrollbar(this Object parent) 
         => parent.Add("Scrollbar").GetComponent<Scrollbar>();
     
     /// <summary>
     /// Adds a scroll view prefab to this parent
     /// </summary>
-    public static ScrollRect AddScrollView(this Transform parent) 
+    public static ScrollRect AddScrollView(this Object parent) 
         => parent.Add("ScrollView").GetComponent<ScrollRect>();
 
     /// <summary>
     /// Adds a button prefab to this parent
     /// </summary>
-    public static ColoredButton AddButton(this Transform parent)
+    public static ColoredButton AddButton(this Object parent)
         => parent.Add("Button").GetComponent<ColoredButton>();
 
     /// <summary>
     /// Fetches the requested asset and creates a copy
     /// </summary>
-    private static GameObject Add(this Transform parent, string name)
+    private static GameObject Add(this Object parent, string name)
     {
-        var asset = AssetHelper<ModHelperPlugin>.LoadAsset<GameObject>(API.Resource.GetBundle("uibundle.assets"), name);
+        var asset = AssetHelper<FarmHelperPlugin>.LoadAsset<GameObject>(API.Resource.GetBundle("uibundle.assets"), name);
 
         if (asset == null)
             throw new System.NullReferenceException($"No asset named '{name}' was found.");
-        
-        return Object.Instantiate(asset, parent);
+
+        Transform transform = parent switch
+        {
+            Component o => o.transform,
+            GameObject obj => obj.transform,
+            _ => null
+        };
+
+        return Object.Instantiate(asset, transform);
     }
 }

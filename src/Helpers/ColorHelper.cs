@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using UnityEngine;
 
-namespace ModHelper.Helpers;
+namespace FarmHelper.Helpers;
 
 /// <summary>
 /// Class helping to add syntax colors to the game
@@ -24,7 +23,7 @@ public static class ColorHelper
         // If invalid color, skip
         if (!IsValidColor(color))
         {
-            Log.Warning<ModHelperPlugin>($"'{color}' is not a valid HEX code and will not be put on the pattern '{pattern}'.");
+            Log.Warning<FarmHelperPlugin>($"'{color}' is not a valid HEX code and will not be put on the pattern '{pattern}'.");
             return false;
         }
         

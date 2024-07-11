@@ -5,14 +5,15 @@
         <TargetFramework>netstandard2.1</TargetFramework>
         <LangVersion>latest</LangVersion>
         <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
-        <AssemblyName>ModHelper</AssemblyName>
-        <RootNamespace>ModHelper</RootNamespace>
         <RunPostBuildEvent>Always</RunPostBuildEvent>
+        <Nullable>disable</Nullable>
+        <PackageId>FarmHelper</PackageId>
+        <IsPackable>false</IsPackable>
     </PropertyGroup>
 
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-      <DocumentationFile>bin\Debug\ModHelper.xml</DocumentationFile>
+      <DocumentationFile>bin\Debug\FarmHelper.xml</DocumentationFile>
     </PropertyGroup>
 
 
@@ -81,13 +82,14 @@
       <Compile Include="src\API\Attributes\PyFunctionAttribute.cs" />
       <Compile Include="src\API\Constants.cs" />
       <Compile Include="src\API\AssemblyLoader.cs" />
+      <Compile Include="src\API\Interfaces\IPageCallback.cs" />
       <Compile Include="src\API\Resource.cs" />
+      <Compile Include="src\API\UI\DefaultPage.cs" />
       <Compile Include="src\API\UI\PluginMenu.cs" />
       <Compile Include="src\Extensions\ColoredButtonExtensions.cs" />
       <Compile Include="src\Extensions\DebugExtensions.cs" />
       <Compile Include="src\Extensions\ImageExtensions.cs" />
       <Compile Include="src\Extensions\GameObjectExtensions.cs" />
-      <Compile Include="src\Extensions\PluginExtensions.cs" />
       <Compile Include="src\Extensions\UiExtensions.cs" />
       <Compile Include="src\Helpers\AssetHelper.cs" />
       <Compile Include="src\Helpers\ColorHelper.cs" />
@@ -97,9 +99,7 @@
       <Compile Include="src\Helpers\FuncHelper.cs" />
       <Compile Include="src\Helpers\UiHelper.cs" />
       <Compile Include="src\ModHelperFunctions.cs" />
-      <Compile Include="src\ModHelperPlugin.cs" />
-      <Compile Include="src\Patches\Menu_Patches.cs" />
-      <Compile Include="src\UI\DefaultPage.cs" />
+      <Compile Include="src\FarmHelperPlugin.cs" />
       <Compile Include="src\UI\PluginListMenu.cs" />
       <Compile Include="src\UI\TitleMenu.cs" />
     </ItemGroup>

@@ -1,7 +1,7 @@
 ﻿using System;
-using ModHelper.API.Attributes;
+using FarmHelper.API.Attributes;
 
-namespace ModHelper;
+namespace FarmHelper;
 
 internal class ModHelperFunctions
 {
