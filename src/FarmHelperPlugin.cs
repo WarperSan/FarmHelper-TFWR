@@ -1,8 +1,9 @@
 ﻿using BepInEx;
 using FarmHelper.API.Attributes;
+using FarmHelper.API.Interfaces;
 using FarmHelper.API.UI;
-using FarmHelper.Helpers;
 using FarmHelper.UI;
+using HarmonyLib;
 
 // ReSharper disable StringLiteralTypo
 
@@ -13,11 +14,17 @@ namespace FarmHelper;
 /// </summary>
 [BepInPlugin("org.warpersan.farmhelper", "Farm Helper", "1.0.0.0")]
 [FarmInfo("WarperSan", "https://github.com/WarperSan/FarmHelper-TFWR")]
-public class FarmHelperPlugin : BaseUnityPlugin
+public class FarmHelperPlugin : BaseUnityPlugin, IToggleable
 {
-    private void Start()
+    private void Awake()
     {
-        FuncHelper.AddAll<ModHelperFunctions>();
+        var harmony = new Harmony("org.warpersan.farmhelper");
+        harmony.PatchAll();
+    }
+
+    public void OnAdd()
+    {
+        ModHelperFunctions.LoadAll();
         PluginMenu.Create<PluginListMenu>();
         PluginMenu.Create<TitleMenu>().Open();
     }

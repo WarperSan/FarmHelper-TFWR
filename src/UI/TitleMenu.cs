@@ -9,5 +9,5 @@ internal class TitleMenu : PluginMenu
     public override string DisplayName => "Title";
 
     /// <inheritdoc />
-    protected override GameObject Create() => FindObjectOfType<Menu>().titlePage;
+    protected override GameObject Create(Menu parent) => parent.titlePage;
 }

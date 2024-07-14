@@ -83,6 +83,7 @@
       <Compile Include="src\API\Constants.cs" />
       <Compile Include="src\API\AssemblyLoader.cs" />
       <Compile Include="src\API\Interfaces\IPageCallback.cs" />
+      <Compile Include="src\API\Interfaces\IToggleable.cs" />
       <Compile Include="src\API\Resource.cs" />
       <Compile Include="src\API\UI\DefaultPage.cs" />
       <Compile Include="src\API\UI\PluginMenu.cs" />
@@ -100,6 +101,8 @@
       <Compile Include="src\Helpers\UiHelper.cs" />
       <Compile Include="src\ModHelperFunctions.cs" />
       <Compile Include="src\FarmHelperPlugin.cs" />
+      <Compile Include="src\Patches\Localizer_Localize.cs" />
+      <Compile Include="src\Patches\Menu_Start.cs" />
       <Compile Include="src\UI\PluginListMenu.cs" />
       <Compile Include="src\UI\TitleMenu.cs" />
     </ItemGroup>

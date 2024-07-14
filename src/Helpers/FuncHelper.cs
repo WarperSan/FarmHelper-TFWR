@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -73,18 +74,29 @@ public static class FuncHelper
         // Fetch data
         var codeName = attr.Name;
         var allTypes = info.GetParameters().Select(p => p.ParameterType).ToArray();
-        var paramTypes = allTypes.Where(p => typeof(IPyObject).IsAssignableFrom(p)).ToList();
-
+        var requiredTypes = allTypes.Where(p => typeof(IPyObject).IsAssignableFrom(p)).ToList();
+        var extraTypes = allTypes.LastOrDefault(t => t.IsArray)?.GetElementType();
+        
         bool success = Add(codeName, (interpreter, @params) =>
         {
+            // Create type list
+            var count = Math.Max(@params.Count, requiredTypes.Count);
+            var types = new List<Type>();
+
+            for (int i = 0; i < count; i++)
+                types.Add(i < requiredTypes.Count ? requiredTypes[i] : extraTypes);
+            
             // Check for params
-            interpreter.bf.CorrectParams(@params, 
-                paramTypes,
+            interpreter.bf.CorrectParams(
+                @params,
+                types,
                 codeName
             );
 
             // Convert arguments
-            var result = callback.DynamicInvoke(args: ConvertParams(allTypes, @params));
+            var arguments = ConvertParams(interpreter, allTypes, @params);
+            
+            var result = callback.DynamicInvoke(arguments);
 
             return result as double? ?? 0;
         });
@@ -122,7 +134,9 @@ public static class FuncHelper
         return success;
     }
     
-    private static object[] ConvertParams(Type[] types, List<IPyObject> parameters)
+    #region Arguments Converting
+
+    private static object[] ConvertParams(Interpreter interpreter, Type[] types, List<IPyObject> parameters)
     {
         object[] args = new object [types.Length];
 
@@ -130,19 +144,40 @@ public static class FuncHelper
         for (int j = 0; j < args.Length; j++)
         {
             Type t = types[j];
+            Type itemType = t.GetElementType();
+            bool isExtra = false;
             object obj;
 
+            // If parameter is Interpreter
             if (t == typeof(Interpreter))
-                obj = Saver.Inst.mainFarm.workspace.interpreter;
-            else
             {
-                obj = Convert.ChangeType(parameters[i], t);
-                i++;
+                obj = interpreter;
+                isExtra = true;
             }
+            // If parameter is params
+            // Convert the rest of parameters
+            else if (t.IsArray && itemType != null)
+            {
+                var tempArgs = Array.CreateInstance(itemType, parameters.Count - i);
+
+                for (int k = 0; k < tempArgs.Length; k++)
+                    tempArgs.SetValue(Convert.ChangeType(parameters[i + k], itemType), k);
+
+                obj = tempArgs;
+                j = args.Length - 1;
+            }
+            // Everything else
+            else
+                obj = Convert.ChangeType(parameters[i], t);
 
             args[j] = obj;
+
+            if (!isExtra)
+                i++;
         }
 
         return args;
     }
+
+    #endregion
 }

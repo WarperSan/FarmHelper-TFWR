@@ -22,4 +22,9 @@ public static class Constants
     
     public const BindingFlags ALL_FLAGS = INSTANCE_FLAGS | STATIC_FLAGS;
     // ---
+    
+    // --- LANG ---
+    public const string ANY = "ANY";
+    public const string ENGLISH = "EN";
+    // ---
 }

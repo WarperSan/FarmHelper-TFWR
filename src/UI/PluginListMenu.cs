@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Reflection;
 using BepInEx;
-using FarmHelper.API;
 using FarmHelper.API.Attributes;
 using FarmHelper.API.Interfaces;
 using FarmHelper.API.UI;
@@ -20,10 +19,8 @@ public class PluginListMenu : PluginMenu
     public override string DisplayName => "Plugin List";
 
     /// <inheritdoc />
-    protected override GameObject Create()
+    protected override GameObject Create(Menu parent)
     {
-        var parent = GameObject.Find(Constants.MENU_PATH);
-        
         var menu = CreateMenu(parent.transform);
         
         var plugins = PluginHelper.GetPlugins()
