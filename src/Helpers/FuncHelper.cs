@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -73,31 +72,61 @@ public static class FuncHelper
         
         // Fetch data
         var codeName = attr.Name;
-        var allTypes = info.GetParameters().Select(p => p.ParameterType).ToArray();
-        var requiredTypes = allTypes.Where(p => typeof(IPyObject).IsAssignableFrom(p)).ToList();
-        var extraTypes = allTypes.LastOrDefault(t => t.IsArray)?.GetElementType();
-        
-        bool success = Add(codeName, (interpreter, @params) =>
-        {
-            // Create type list
-            var count = Math.Max(@params.Count, requiredTypes.Count);
-            var types = new List<Type>();
+        var parameters = info.GetParameters();
+        var types= parameters.Select(p => p.ParameterType).ToArray();
 
-            for (int i = 0; i < count; i++)
-                types.Add(i < requiredTypes.Count ? requiredTypes[i] : extraTypes);
+        // Convert the list of types into a list of argument types
+        var argumentTypes = new List<Type>();
+        var parameterInfos = new List<ParameterInfo>();
+
+        for (int i = 0; i < types.Length; i++)
+        {
+            var type = types[i];
             
-            // Check for params
+            if (!typeConverts.TryGetValue(type, out var typeToAdd) && typeof(IPyObject).IsAssignableFrom(type))
+                typeToAdd = type;
+            
+            if (typeToAdd == null)
+                continue;
+
+            parameterInfos.Add(parameters[i]);
+            argumentTypes.Add(typeToAdd);
+        }
+        
+        bool success = Add(codeName, (interpreter, @params) => {
+            // Add the missing optional parameters
+            ManageOptionals(@params, parameterInfos, argumentTypes);
+            
+            // Manage params array
+            int arrayArgs = ManageParamArray(@params.Count, parameterInfos.Count, argumentTypes);
+            
+            // Check if the parameters are valid
             interpreter.bf.CorrectParams(
                 @params,
-                types,
+                argumentTypes,
                 codeName
             );
 
-            // Convert arguments
-            var arguments = ConvertParams(interpreter, allTypes, @params);
-            
-            var result = callback.DynamicInvoke(arguments);
+            // Converts a list of types into a list of objects
+            var arguments = ConvertParameters(
+                @params,
+                types,
+                interpreter,
+                arrayArgs
+            );
 
+            // Add empty params array
+            if (arguments.Count != parameters.Length)
+            {
+                var paramsItem = parameters.Last().ParameterType.GetElementType();
+                if (paramsItem != null)
+                    arguments.Add(Array.CreateInstance(paramsItem, 0));
+            }
+            
+            // Call the method
+            var result = callback.DynamicInvoke(arguments.ToArray());
+            
+            // Return delay
             return result as double? ?? 0;
         });
 
@@ -136,48 +165,116 @@ public static class FuncHelper
     
     #region Arguments Converting
 
-    private static object[] ConvertParams(Interpreter interpreter, Type[] types, List<IPyObject> parameters)
+    private static readonly Dictionary<Type, Type> typeConverts = new() {
+        [typeof(double)] = typeof(PyNumber),
+        [typeof(bool)] = typeof(PyBool),
+    };
+
+    /// <summary>
+    /// Converts PyObjects to system types
+    /// </summary>
+    private static bool ConvertParameter(object value, Type wanted, out object result)
     {
-        object[] args = new object [types.Length];
-
-        var i = 0;
-        for (int j = 0; j < args.Length; j++)
+        if (wanted == typeof(double) && value is PyNumber number)
         {
-            Type t = types[j];
-            Type itemType = t.GetElementType();
-            bool isExtra = false;
-            object obj;
-
-            // If parameter is Interpreter
-            if (t == typeof(Interpreter))
-            {
-                obj = interpreter;
-                isExtra = true;
-            }
-            // If parameter is params
-            // Convert the rest of parameters
-            else if (t.IsArray && itemType != null)
-            {
-                var tempArgs = Array.CreateInstance(itemType, parameters.Count - i);
-
-                for (int k = 0; k < tempArgs.Length; k++)
-                    tempArgs.SetValue(Convert.ChangeType(parameters[i + k], itemType), k);
-
-                obj = tempArgs;
-                j = args.Length - 1;
-            }
-            // Everything else
-            else
-                obj = Convert.ChangeType(parameters[i], t);
-
-            args[j] = obj;
-
-            if (!isExtra)
-                i++;
+            result = number.num;
+            return true;
         }
 
-        return args;
+        if (wanted == typeof(bool) && value is PyBool boolean)
+        {
+            result = boolean.num != 0;
+            return true;
+        }
+
+        if (wanted == typeof(string) && value is PyString text)
+        {
+            result = text.str;
+            return true;
+        }
+
+        if (wanted == typeof(GridDirection) && value is PyGridDirection gridDirection)
+        {
+            result = gridDirection.dir;
+            return true;
+        }
+        
+        if (typeof(IPyObject).IsAssignableFrom(wanted) && value.GetType() == wanted)
+        {
+            result = value;
+            return true;
+        }
+
+        result = null;
+        return false;
     }
 
+    private static void ManageOptionals(List<IPyObject> @params, List<ParameterInfo> infos, List<Type> types)
+    {
+        for (int i = @params.Count; i < infos.Count; i++)
+        {
+            if (!infos[i].IsOptional)
+                break;
+                
+            @params.Add(
+                (IPyObject) Activator.CreateInstance(types[i], infos[i].DefaultValue)
+            );
+        }
+    }
+    private static int ManageParamArray(int receivedCount, int originalCount, List<Type> types)
+    {
+        var arrayArgs = receivedCount - originalCount;
+        types.RemoveRange(originalCount, types.Count - originalCount);
+        for (int i = 0; i < arrayArgs; i++)
+            types.Add(types.Last());
+        
+        return Math.Max(arrayArgs, 0);
+    }
+    private static List<object> ConvertParameters(
+        List<IPyObject> @params, 
+        Type[] types, 
+        Interpreter interpreter,
+        int arrayArgs
+    ) {
+        var arguments = new List<object>();
+        List<IPyObject>.Enumerator it = @params.GetEnumerator();
+        bool hasNext = it.MoveNext();
+        while (hasNext)
+        {
+            object result;
+            Type type = types[arguments.Count];
+            Type itemType = type.GetElementType();
+
+            if (type == typeof(Interpreter))
+                result = interpreter;
+            // If type is array, put all items in it
+            else if (type.IsArray && itemType != null)
+            {
+                var tempArgs = Array.CreateInstance(itemType, arrayArgs);
+
+                for (int k = 0; k < tempArgs.Length; k++)
+                {
+                    ConvertParameter(it.Current, itemType, out result);
+                    tempArgs.SetValue(result, k);
+                    it.MoveNext();
+                }
+
+                result = tempArgs;
+                hasNext = it.MoveNext();
+            }
+            // If item is convertable, go to next
+            else if (ConvertParameter(it.Current, type, out result))
+                hasNext = it.MoveNext();
+            
+            // If result invalid, skip
+            if (result == null)
+                continue;
+                
+            arguments.Add(result);
+        }
+
+        return arguments;
+    }
+    
     #endregion
 }

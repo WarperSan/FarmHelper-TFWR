@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using FarmHelper.API.Attributes;
 using FarmHelper.Helpers;
+// ReSharper disable UnusedMember.Local
 
 namespace FarmHelper;
 
@@ -17,7 +17,7 @@ Returns the number `x` raised to the power `y`.
 Examples:
 `pow(2, 2)   # 4`
 `pow(5, 10)  # 9765625 `
-`pow(10, -3) # 0.001`
+`pow(10, -2) # 0.01`
 
 Takes the time of `1` operations to execute.");
         LocalizerHelper.Add("code_tooltip_floor", @"`floor(x)`
@@ -41,7 +41,7 @@ Takes the time of `1` operations to execute.");
     }
     
     [PyFunction("pow", "#33b5aa")]
-    private static double Pow(Interpreter interpreter, PyNumber a, PyNumber b)
+    private static double Pow(Interpreter interpreter, double a, double b)
     {
         var result = Math.Pow(a, b);
         interpreter.State.ReturnValue = new PyNumber(result);
@@ -49,7 +49,7 @@ Takes the time of `1` operations to execute.");
     }
 
     [PyFunction("floor", "#33b5aa")]
-    private static double Floor(Interpreter interpreter, PyNumber x)
+    private static double Floor(Interpreter interpreter, double x)
     {
         var result = Math.Floor(x);
         interpreter.State.ReturnValue = new PyNumber(result);
@@ -57,19 +57,21 @@ Takes the time of `1` operations to execute.");
     }
 
     [PyFunction("round", "#33b5aa")]
-    private static double Round(Interpreter interpreter, PyNumber x)
+    private static double Round(Interpreter interpreter, double x)
     {
         var result = Math.Round(x);
         interpreter.State.ReturnValue = new PyNumber(result);
         return interpreter.GetOpCount(NodeType.Expr);
     }
 
-    [PyFunction("addition", "#33b5aa")]
-    private static double Addition(Interpreter interpreter, PyNumber a, PyNumber b, params PyNumber[] args)
+    // --- PARAMS ---
+    [PyFunction("avg", "#33b5aa")]
+    private static double Avg(Interpreter interpreter, double a, double b, params double[] args)
     {
-        var total = args.Aggregate(a + b, (current, number) => current + number);
+        var total = (a + b + args.Sum()) / (args.Length + 2);
 
         interpreter.State.ReturnValue = new PyNumber(total);
         return interpreter.GetOpCount(NodeType.Expr);
     }
+    // ---
 }

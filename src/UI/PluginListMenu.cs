@@ -48,7 +48,7 @@ public class PluginListMenu : PluginMenu
     {
         var menu = parent.AddPanel();
         menu.SetActive(true); // For Layout
-
+        
         // Name
         menu.name = "PluginListMenu";
         
