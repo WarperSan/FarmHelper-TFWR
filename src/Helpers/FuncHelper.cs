@@ -60,6 +60,20 @@ public static class FuncHelper
     /// </remarks>
     public static bool Add(Delegate callback)
     {
+        //
+        // How it works:
+        // Before call
+        // - Filter and convert the types of the callback (Interpreter -> _; bool -> PyBool)
+        // During call
+        // - Add the optional parameters if they are not specified
+        // - Add extra types for the params array parameter
+        // - Check if the parameter count is equal to expected count
+        // - Check if the parameters are of the valid type
+        // - Create all the arguments of the callback and convert parameters if necessary
+        // - Add empty params array if needed and not specified
+        // - Invoke callback with arguments
+        //
+        
         var info = callback.GetMethodInfo();
         var attr = info.GetCustomAttribute<PyFunctionAttribute>();
 
@@ -75,18 +89,25 @@ public static class FuncHelper
         var parameters = info.GetParameters();
         var types= parameters.Select(p => p.ParameterType).ToArray();
         var hasParamArray = parameters.Last().GetCustomAttribute<ParamArrayAttribute>() == null;
-        
+        var paramsItem = parameters.Last().ParameterType.GetElementType();
+
         // Convert the list of types into a list of argument types
         var argumentTypes = new List<Type>();
         var parameterInfos = new List<ParameterInfo>();
 
         for (int i = 0; i < types.Length; i++)
         {
-            var type = types[i];
-            
-            if (!typeConverts.TryGetValue(type, out var typeToAdd) && typeof(IPyObject).IsAssignableFrom(type))
+            Type type = types[i];
+            Type typeToAdd = null;
+
+            // If type children of IPyObject, use type
+            if (typeof(IPyObject).IsAssignableFrom(type))
                 typeToAdd = type;
+            // If type has conversion, use converted type
+            else if (typeConverts.TryGetValue(type, out var convertedType))
+                typeToAdd = convertedType;
             
+            // Skip invalid types
             if (typeToAdd == null)
                 continue;
 
@@ -132,12 +153,6 @@ public static class FuncHelper
                     ));
                 }
             }
-            
-            // interpreter.bf.CorrectParams(
-            //     @params,
-            //     argumentTypes,
-            //     codeName
-            // );
 
             // Converts a list of types into a list of objects
             var arguments = ConvertParameters(
@@ -148,12 +163,8 @@ public static class FuncHelper
             );
 
             // Add empty params array
-            if (arguments.Count != parameters.Length)
-            {
-                var paramsItem = parameters.Last().ParameterType.GetElementType();
-                if (paramsItem != null)
-                    arguments.Add(Array.CreateInstance(paramsItem, 0));
-            }
+            if (arguments.Count != parameters.Length && paramsItem != null)
+                arguments.Add(Array.CreateInstance(paramsItem, 0));
             
             // Call the method
             var result = callback.DynamicInvoke(arguments.ToArray());
@@ -198,8 +209,22 @@ public static class FuncHelper
     #region Arguments Converting
 
     private static readonly Dictionary<Type, Type> typeConverts = new() {
+        [typeof(sbyte)] = typeof(PyNumber),
+        [typeof(byte)] = typeof(PyNumber),
+        [typeof(char)] = typeof(PyNumber),
+        [typeof(short)] = typeof(PyNumber),
+        [typeof(ushort)] = typeof(PyNumber),
+        [typeof(int)] = typeof(PyNumber),
+        [typeof(uint)] = typeof(PyNumber),
+        [typeof(long)] = typeof(PyNumber),
+        [typeof(ulong)] = typeof(PyNumber),
         [typeof(double)] = typeof(PyNumber),
+        [typeof(float)] = typeof(PyNumber),
+        [typeof(decimal)] = typeof(PyNumber),
+        
         [typeof(bool)] = typeof(PyBool),
+        [typeof(string)] = typeof(PyString),
+        [typeof(GridDirection)] = typeof(PyGridDirection)
     };
 
     /// <summary>
@@ -207,42 +232,24 @@ public static class FuncHelper
     /// </summary>
     private static bool ConvertParameter(object value, Type wanted, out object result)
     {
-        // Default case
+        // If value already correct type, return value
         if (wanted.IsInstanceOfType(value))
         {
             result = value;
             return true;
         }
         
-        // -- Python to System ---
-        if (wanted == typeof(double) && value is PyNumber number)
+        // Try to convert value to wanted type
+        result = value switch
         {
-            result = number.num;
-            return true;
-        }
-
-        if (wanted == typeof(bool) && value is PyBool boolean)
-        {
-            result = boolean.num != 0;
-            return true;
-        }
-
-        if (wanted == typeof(string) && value is PyString text)
-        {
-            result = text.str;
-            return true;
-        }
-        // ---
-
-        // --- 
-        if (wanted == typeof(GridDirection) && value is PyGridDirection gridDirection)
-        {
-            result = gridDirection.dir;
-            return true;
-        }
-
-        result = null;
-        return false;
+            PyBool boolean => boolean.num != 0, // PyBool -> bool
+            PyNumber number => Convert.ChangeType(number.num, wanted), // PyNumber -> number
+            PyString text => text.str, // PyString -> string
+            PyGridDirection direction => direction.dir, // PyGridDirection -> GridDirection
+            _ =>  null
+        };
+            
+        return result != null;
     }
 
     private static void ManageOptionals(List<IPyObject> @params, List<ParameterInfo> infos, List<Type> types)
@@ -308,6 +315,12 @@ public static class FuncHelper
             // If item is convertable, go to next
             else if (ConvertParameter(it.Current, type, out result))
                 hasNext = it.MoveNext();
+            else
+            {
+                Log.Warning<FarmHelperPlugin>($"Could not convert from {it.Current?.GetType()} to {type}");
+                result = it.Current;
+                hasNext = it.MoveNext();
+            }
             
             // If result invalid, continue
             if (result == null)

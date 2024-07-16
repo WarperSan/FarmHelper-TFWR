@@ -73,5 +73,12 @@ Takes the time of `1` operations to execute.");
         interpreter.State.ReturnValue = new PyNumber(total);
         return interpreter.GetOpCount(NodeType.Expr);
     }
+
+    [PyFunction("test", "#33b5aa")]
+    private static double Test(Interpreter interpreter, int a, double b)
+    {
+        interpreter.State.ReturnValue = new PyNumber(a + b);
+        return interpreter.GetOpCount(NodeType.Expr);
+    }
     // ---
 }
