@@ -22,6 +22,9 @@ public static class LocalizerHelper
     /// <returns>Value for the key or null if not found</returns>
     public static string GetText(string lang, string key)
     {
+        if (lang == null || key == null)
+            return null;
+        
         while (true)
         {
             // If lang is defined

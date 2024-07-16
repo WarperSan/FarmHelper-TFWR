@@ -2,6 +2,7 @@
 using FarmHelper.API.Attributes;
 using FarmHelper.API.Interfaces;
 using FarmHelper.API.UI;
+using FarmHelper.Helpers;
 using FarmHelper.UI;
 using HarmonyLib;
 
@@ -24,6 +25,9 @@ public class FarmHelperPlugin : BaseUnityPlugin, IToggleable
 
     public void OnAdd()
     {
+        LocalizerHelper.Add("error_wrong_number_args_detailed", "{0} takes {1} arguments.\n\nExpected: {2}\nReceived: {3}");
+        LocalizerHelper.Add("error_wrong_args_detailed", "{0} expected '{1}' as the #{2} argument.\n\nInstead, it got {3}.");
+        
         ModHelperFunctions.LoadAll();
         PluginMenu.Create<PluginListMenu>();
         PluginMenu.Create<TitleMenu>().Open();

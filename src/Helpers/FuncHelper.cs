@@ -74,7 +74,8 @@ public static class FuncHelper
         var codeName = attr.Name;
         var parameters = info.GetParameters();
         var types= parameters.Select(p => p.ParameterType).ToArray();
-
+        var hasParamArray = parameters.Last().GetCustomAttribute<ParamArrayAttribute>() == null;
+        
         // Convert the list of types into a list of argument types
         var argumentTypes = new List<Type>();
         var parameterInfos = new List<ParameterInfo>();
@@ -94,18 +95,49 @@ public static class FuncHelper
         }
         
         bool success = Add(codeName, (interpreter, @params) => {
+            
             // Add the missing optional parameters
             ManageOptionals(@params, parameterInfos, argumentTypes);
             
             // Manage params array
-            int arrayArgs = ManageParamArray(@params.Count, parameterInfos.Count, argumentTypes);
+            int arrayArgs = ManageParamArray(
+                @params, 
+                parameterInfos, 
+                argumentTypes,
+                hasParamArray
+            );
             
             // Check if the parameters are valid
-            interpreter.bf.CorrectParams(
-                @params,
-                argumentTypes,
-                codeName
-            );
+            if (@params.Count != argumentTypes.Count)
+            {
+                throw new ExecuteException(CodeUtilities.LocalizeAndFormat(
+                    "error_wrong_number_args_detailed", 
+                    codeName + "()", 
+                    argumentTypes.Count,
+                    string.Join(", ", argumentTypes.Select(t => t.FullName)),
+                    string.Join(", ", @params.Select(t => t.GetType().FullName))
+                ));
+            }
+            
+            for (int i = 0; i < @params.Count; ++i)
+            {
+                if (!argumentTypes[i].IsInstanceOfType(@params[i]))
+                {
+                    throw new ExecuteException(CodeUtilities.LocalizeAndFormat(
+                        "error_wrong_args_detailed",
+                        codeName + "()",
+                        argumentTypes[i].FullName,
+                        i + 1, 
+                        CodeUtilities.ToNiceString(@params[i], isSequenceElement: true)
+                    ));
+                }
+            }
+            
+            // interpreter.bf.CorrectParams(
+            //     @params,
+            //     argumentTypes,
+            //     codeName
+            // );
 
             // Converts a list of types into a list of objects
             var arguments = ConvertParameters(
@@ -175,6 +207,14 @@ public static class FuncHelper
     /// </summary>
     private static bool ConvertParameter(object value, Type wanted, out object result)
     {
+        // Default case
+        if (wanted.IsInstanceOfType(value))
+        {
+            result = value;
+            return true;
+        }
+        
+        // -- Python to System ---
         if (wanted == typeof(double) && value is PyNumber number)
         {
             result = number.num;
@@ -192,16 +232,12 @@ public static class FuncHelper
             result = text.str;
             return true;
         }
+        // ---
 
+        // --- 
         if (wanted == typeof(GridDirection) && value is PyGridDirection gridDirection)
         {
             result = gridDirection.dir;
-            return true;
-        }
-        
-        if (typeof(IPyObject).IsAssignableFrom(wanted) && value.GetType() == wanted)
-        {
-            result = value;
             return true;
         }
 
@@ -221,10 +257,17 @@ public static class FuncHelper
             );
         }
     }
-    private static int ManageParamArray(int receivedCount, int originalCount, List<Type> types)
+    private static int ManageParamArray(List<IPyObject> @params, List<ParameterInfo> infos, List<Type> types, bool hasParamArray)
     {
-        var arrayArgs = receivedCount - originalCount;
-        types.RemoveRange(originalCount, types.Count - originalCount);
+        // Clean from previous call
+        types.RemoveRange(infos.Count, types.Count - infos.Count);
+
+        // If not params, skip
+        if (hasParamArray)
+            return 0;
+        
+        // Add missing
+        var arrayArgs = @params.Count - infos.Count;
         for (int i = 0; i < arrayArgs; i++)
             types.Add(types.Last());
         
@@ -266,9 +309,13 @@ public static class FuncHelper
             else if (ConvertParameter(it.Current, type, out result))
                 hasNext = it.MoveNext();
             
-            // If result invalid, skip
+            // If result invalid, continue
             if (result == null)
+            {
+                Log.Error<FarmHelperPlugin>($"Error with a param: '{it.Current?.GetType().FullName}' -> '{type.FullName}'");
+                hasNext = it.MoveNext();
                 continue;
+            }
                 
             arguments.Add(result);
         }
