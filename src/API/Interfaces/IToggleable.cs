@@ -1,7 +1,7 @@
 namespace FarmHelper.API.Interfaces;
 
 /// <summary>
-/// Used to define all the plugins that can be toggled
+/// Defines a plugin that can be toggled
 /// </summary>
 public interface IToggleable
 {

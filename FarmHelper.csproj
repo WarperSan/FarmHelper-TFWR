@@ -85,6 +85,7 @@
       <Compile Include="src\API\Interfaces\IPageCallback.cs" />
       <Compile Include="src\API\Interfaces\IToggleable.cs" />
       <Compile Include="src\API\Resource.cs" />
+      <Compile Include="src\API\Singleton.cs" />
       <Compile Include="src\API\UI\DefaultPage.cs" />
       <Compile Include="src\API\UI\PluginMenu.cs" />
       <Compile Include="src\Extensions\ColoredButtonExtensions.cs" />
@@ -118,6 +119,10 @@
     
     <ItemGroup>
       <PackageReference Include="Octokit" Version="13.0.1" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <Folder Include="src\API\Settings\" />
     </ItemGroup>
 
   <Import Project="..\farmer.targets" />

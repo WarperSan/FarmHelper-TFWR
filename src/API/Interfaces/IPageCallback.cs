@@ -4,7 +4,7 @@ using UnityEngine;
 namespace FarmHelper.API.Interfaces;
 
 /// <summary>
-/// Used to define all the plugins that uses their custom page
+/// Defines a plugin that uses it's custom page
 /// </summary>
 public interface IPageCallback
 {
