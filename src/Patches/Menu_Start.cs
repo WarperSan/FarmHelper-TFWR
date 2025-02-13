@@ -6,14 +6,14 @@ using HarmonyLib;
 namespace FarmHelper.Patches;
 
 [HarmonyPatch(typeof(Menu), nameof(Menu.Start), [])]
-internal static class Menu_Start
+internal static class MenuStart
 {
     private static void Prefix()
     {
         PluginMenu.ClearAll();
-        foreach (var (_, info) in Chainloader.PluginInfos)
+        foreach (var entry in Chainloader.PluginInfos)
         {
-            if (info.Instance is IToggleable toggleable)
+            if (entry.Value.Instance is IToggleable toggleable)
                 toggleable.OnAdd();
         }
     }

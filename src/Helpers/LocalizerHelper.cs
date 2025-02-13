@@ -14,7 +14,7 @@ public static class LocalizerHelper
     ///      Key => key (code_tooltip_max)
     ///      Value => value (actual text)
     /// </summary>
-    private static readonly Dictionary<string, Dictionary<string, string>> languages = new();
+    private static readonly Dictionary<string, Dictionary<string, string>> Languages = new();
 
     /// <summary>
     /// Tries to find the text of the given key in the given language or in any language.
@@ -28,7 +28,7 @@ public static class LocalizerHelper
         while (true)
         {
             // If lang is defined
-            if (languages.TryGetValue(lang, out var lines))
+            if (Languages.TryGetValue(lang, out var lines))
             {
                 // If key is defined in lang
                 if (lines.TryGetValue(key, out var value)) 
@@ -36,21 +36,21 @@ public static class LocalizerHelper
             }
 
             // If key not found in ANY, 
-            if (lang == Constants.ANY) 
+            if (lang == Constants.Any) 
                 return null;
 
-            lang = Constants.ANY;
+            lang = Constants.Any;
         }
     }
     
     /// <summary>
     /// Adds the given value at the given key to the given language
     /// </summary>
-    public static void Add(string key, string value, string lang = Constants.ANY)
+    public static void Add(string key, string value, string lang = Constants.Any)
     {
-        if (!languages.ContainsKey(lang)) 
-            languages.Add(lang, new Dictionary<string, string>());
+        if (!Languages.ContainsKey(lang)) 
+            Languages.Add(lang, new Dictionary<string, string>());
 
-        languages[lang][key] = value;
+        Languages[lang][key] = value;
     }
 }

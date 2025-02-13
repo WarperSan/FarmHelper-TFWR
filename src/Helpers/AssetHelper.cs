@@ -7,11 +7,11 @@ namespace FarmHelper.Helpers;
 
 internal static class AssetHelper
 {
-    private static readonly Dictionary<string, AssetBundle> cachedBundles = new();
+    private static readonly Dictionary<string, AssetBundle> CachedBundles = new();
 
     internal static AssetBundle LoadBundle<T>(string name)
     {
-        if (cachedBundles.TryGetValue(name, out AssetBundle bundle))
+        if (CachedBundles.TryGetValue(name, out var bundle))
             return bundle;
         
         var stream = typeof(T).Assembly.GetManifestResourceStream(name);
@@ -19,12 +19,12 @@ internal static class AssetHelper
         if (stream == null)
             throw new NullReferenceException($"No bundle named '{name}'.");
         
-        return cachedBundles[name] = AssetBundle.LoadFromStream(stream);
+        return CachedBundles[name] = AssetBundle.LoadFromStream(stream);
     }
 }
 
-public static class AssetHelper<U>
+public static class AssetHelper<TU>
 {
     public static T LoadAsset<T>(string bundleName, string assetName) where T : Object
-        => AssetHelper.LoadBundle<U>(bundleName)?.LoadAsset<T>(assetName);
+        => AssetHelper.LoadBundle<TU>(bundleName)?.LoadAsset<T>(assetName);
 }

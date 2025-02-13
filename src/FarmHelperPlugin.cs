@@ -19,7 +19,7 @@ public class FarmHelperPlugin : BaseUnityPlugin, IToggleable
 {
     private void Awake()
     {
-        API.AssemblyLoader.LoadEmbeddedDLL();
+        //API.AssemblyLoader.LoadEmbeddedDLL();
         var harmony = new Harmony("org.warpersan.farmhelper");
         harmony.PatchAll();
     }

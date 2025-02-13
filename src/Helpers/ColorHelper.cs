@@ -53,7 +53,7 @@ public static class ColorHelper
     private static bool IsValidColor(string color)
     {
         // Should start with #
-        if (!color.StartsWith('#'))
+        if (!color.StartsWith("#"))
             return false;
 
         // Wrong length
@@ -61,6 +61,6 @@ public static class ColorHelper
             return false;
 
         // Check if string is valid int
-        return int.TryParse(color[1..], System.Globalization.NumberStyles.HexNumber, null, out _);
+        return int.TryParse(color.Substring(1), System.Globalization.NumberStyles.HexNumber, null, out _);
     }
 }

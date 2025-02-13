@@ -9,7 +9,7 @@ internal static class AssemblyLoader
     {
         AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
         {
-            string resourceName = Resource.GetDLL(new AssemblyName(args.Name).Name);
+            var resourceName = Resource.GetDLL(new AssemblyName(args.Name).Name);
 
             using var stream = Assembly.GetExecutingAssembly()
                 .GetManifestResourceStream(resourceName);
@@ -17,7 +17,7 @@ internal static class AssemblyLoader
             if (stream == null)
                 return null;
             
-            byte[] assemblyData = new byte[stream.Length];
+            var assemblyData = new byte[stream.Length];
 
             _ = stream.Read(assemblyData, 0, assemblyData.Length);
 

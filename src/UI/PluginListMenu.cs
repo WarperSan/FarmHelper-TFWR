@@ -35,14 +35,14 @@ public class PluginListMenu : PluginMenu
         
         // Add pages
         foreach (var plugin in plugins)
-            AddPluginPage(plugin, pluginList.content);
+            AddPluginPage(plugin, _pluginList.content);
         
         return menu;
     }
 
     #region Menu UI
 
-    private ScrollRect pluginList;
+    private ScrollRect _pluginList;
 
     private GameObject CreateMenu(Transform parent)
     {
@@ -64,17 +64,17 @@ public class PluginListMenu : PluginMenu
         backRect.anchorMax = new Vector2(1, 0.99f);
         
         // Scroll view
-        pluginList = menu.AddScrollView();
+        _pluginList = menu.AddScrollView();
         
-        var group = pluginList.content.GetComponent<VerticalLayoutGroup>();
+        var group = _pluginList.content.GetComponent<VerticalLayoutGroup>();
         group.spacing = 4;
         group.childControlHeight = false;
         group.childScaleHeight = true;
         
-        var listRect = pluginList.GetComponent<RectTransform>();
+        var listRect = _pluginList.GetComponent<RectTransform>();
         listRect.anchorMin = new Vector2(0.02f, 0.02f);
         listRect.anchorMax = new Vector2(0.98f, 0.90f);
-        pluginList.GetComponent<Image>().color = new Color(45f / 255, 45f / 255, 45f / 255, 93f / 255);
+        _pluginList.GetComponent<Image>().color = new Color(45f / 255, 45f / 255, 45f / 255, 93f / 255);
         
         return menu;
     }

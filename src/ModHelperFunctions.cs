@@ -41,44 +41,44 @@ Takes the time of `1` operations to execute.");
     }
     
     [PyFunction("pow", "#33b5aa")]
-    private static double Pow(Interpreter interpreter, double a, double b)
+    private static double Pow(Execution execution, double a, double b)
     {
         var result = Math.Pow(a, b);
-        interpreter.State.ReturnValue = new PyNumber(result);
-        return interpreter.GetOpCount(NodeType.Expr);
+        execution.State.ReturnValue = new PyNumber(result);
+        return Execution.OPERATION_OPS;
     }
 
     [PyFunction("floor", "#33b5aa")]
-    private static double Floor(Interpreter interpreter, double x)
+    private static double Floor(Execution execution, double x)
     {
         var result = Math.Floor(x);
-        interpreter.State.ReturnValue = new PyNumber(result);
-        return interpreter.GetOpCount(NodeType.Expr);
+        execution.State.ReturnValue = new PyNumber(result);
+        return Execution.OPERATION_OPS;
     }
 
     [PyFunction("round", "#33b5aa")]
-    private static double Round(Interpreter interpreter, double x)
+    private static double Round(Execution execution, double x)
     {
         var result = Math.Round(x);
-        interpreter.State.ReturnValue = new PyNumber(result);
-        return interpreter.GetOpCount(NodeType.Expr);
+        execution.State.ReturnValue = new PyNumber(result);
+        return Execution.OPERATION_OPS;
     }
 
     // --- PARAMS ---
     [PyFunction("avg", "#33b5aa")]
-    private static double Avg(Interpreter interpreter, double a, double b, params double[] args)
+    private static double Avg(Execution execution, double a, double b, params double[] args)
     {
         var total = (a + b + args.Sum()) / (args.Length + 2);
 
-        interpreter.State.ReturnValue = new PyNumber(total);
-        return interpreter.GetOpCount(NodeType.Expr);
+        execution.State.ReturnValue = new PyNumber(total);
+        return Execution.OPERATION_OPS;
     }
 
     [PyFunction("test", "#33b5aa")]
-    private static double Test(Interpreter interpreter, int a, double b)
+    private static double Test(Execution execution, int a, double b)
     {
-        interpreter.State.ReturnValue = new PyNumber(a + b);
-        return interpreter.GetOpCount(NodeType.Expr);
+        execution.State.ReturnValue = new PyNumber(a + b);
+        return Execution.OPERATION_OPS;
     }
     // ---
 }

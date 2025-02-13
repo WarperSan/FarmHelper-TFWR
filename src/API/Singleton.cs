@@ -8,25 +8,25 @@ namespace FarmHelper.API;
 /// <typeparam name="T">Type of the class</typeparam>
 public abstract class Singleton<T> : MonoBehaviour where T : new()
 {
-    private static T __instance;
+    private static T _instance;
 
     /// <summary>
     /// Unique instance of <typeparamref name="T"/>
     /// </summary>
-    public static T Instance => __instance ??= new T();
+    public static T Instance => _instance ??= new T();
 
     #region MonoBehaviour
 
     private void Awake()
     {
-        if (__instance != null)
+        if (_instance != null)
         {
             Debug.LogWarning($"Another instance of {GetType().Name} has been found.");
             Destroy(gameObject);
             return;
         }
 
-        __instance = gameObject.GetComponent<T>();
+        _instance = gameObject.GetComponent<T>();
 
         if (!DestroyOnLoad)
             DontDestroyOnLoad(gameObject);

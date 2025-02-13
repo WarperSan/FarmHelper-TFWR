@@ -75,7 +75,7 @@ public static class ImageExtensions
         
         // Create texture
         var t = new Texture2D(1, 1);
-        t.LoadImage(bytes);
+        t.LoadRawTextureData(bytes);
 
         return t;
     }

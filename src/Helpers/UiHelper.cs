@@ -8,7 +8,7 @@ namespace FarmHelper.Helpers;
 /// </summary>
 public static class UiHelper
 {
-    private const string TEMPLATE = Constants.TITLE_PATH + "/PlayButton";
+    private const string Template = Constants.TitlePath + "/PlayButton";
     
     /// <summary>
     /// Adds a button to the title screen
@@ -22,7 +22,7 @@ public static class UiHelper
         button = null;
 
         // Get template
-        var template = GameObject.Find(TEMPLATE);
+        var template = GameObject.Find(Template);
 
         if (template == null)
             return false;
@@ -42,8 +42,8 @@ public static class UiHelper
         
         // Configure button
         newBtn.GetComponent<RectTransform>().localPosition += new Vector3(
-            (newBtn.GetComponent<RectTransform>().rect.width + Constants.MAIN_TITLE_OFFSET_X) * x, 
-            -Constants.MAIN_TITLE_OFFSET_Y * y
+            (newBtn.GetComponent<RectTransform>().rect.width + Constants.MainTitleOffsetX) * x, 
+            -Constants.MainTitleOffsetY * y
         );
 
         return true;
@@ -53,5 +53,5 @@ public static class UiHelper
     /// Sets active the title screen
     /// </summary>
     /// <param name="isActive"></param>
-    public static void SetActiveTitle(bool isActive) => GameObject.Find(Constants.TITLE_PATH)?.SetActive(isActive);
+    public static void SetActiveTitle(bool isActive) => GameObject.Find(Constants.TitlePath)?.SetActive(isActive);
 }

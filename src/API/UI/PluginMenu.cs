@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using FarmHelper.Helpers;
 using UnityEngine;
 
@@ -13,35 +12,33 @@ public abstract class PluginMenu : MonoBehaviour
 {
     #region Static
 
-    private static readonly List<(Type, PluginMenu)> menus = [];
-    private static readonly Stack<PluginMenu> history = new();
+    private static readonly Dictionary<Type, PluginMenu> Menus = [];
+    private static readonly List<PluginMenu> History = [];
 
     /// <summary>
     /// Obtains the first instance of the given menu
     /// </summary>
     /// <returns>First instance found or null</returns>
-    public static T GetInstance<T>() where T : PluginMenu 
-        => menus.FirstOrDefault(menu => menu.Item2 is T).Item2 as T;
+    public static T GetInstance<T>() where T : PluginMenu => Menus.TryGetValue(typeof(T), out var menu) ? (T)menu : null;
 
     /// <summary>
     /// Obtains the previous menu in the stack
     /// </summary>
     /// <returns>Previous menu or null</returns>
-    public static PluginMenu GetPrevious() 
-        => history.TryPeek(out PluginMenu menu) ? menu : null;
+    public static PluginMenu GetPrevious() => History.Count > 0 ? History[History.Count - 1] : null;
 
     /// <summary>
     /// Clears every menu created
     /// </summary>
     public static void ClearAll()
     {
-        history.Clear();
-        foreach (var (_, menu) in menus)
+        History.Clear();
+        foreach (var menu in Menus)
         {
-            if (menu.gameObject != null)
-                Destroy(menu.gameObject);
+            if (menu.Value.gameObject)
+                Destroy(menu.Value.gameObject);
         }
-        menus.Clear();
+        Menus.Clear();
     }
 
     #endregion
@@ -53,29 +50,29 @@ public abstract class PluginMenu : MonoBehaviour
     /// <returns>Created menu or null if an error occurred</returns>
     public static T Create<T>() where T : PluginMenu
     {
-        GameObject gameObject = new GameObject(typeof(T).FullName);
+        var gameObject = new GameObject(typeof(T).FullName);
         DontDestroyOnLoad(gameObject);
         
-        T menu = gameObject.AddComponent<T>();
+        var menu = gameObject.AddComponent<T>();
 
-        Menu parent = GameObject.Find(Constants.MENU_PATH)?.GetComponent<Menu>();
+        var parent = GameObject.Find(Constants.MenuPath)?.GetComponent<Menu>();
 
         if (parent == null)
         {
-            Log.Warning<FarmHelperPlugin>($"The object 'Menu' was not found at '{Constants.MENU_PATH}'.");
+            Log.Warning<FarmHelperPlugin>($"The object 'Menu' was not found at '{Constants.MenuPath}'.");
             parent = FindObjectOfType<Menu>();
         }
         
-        menu.root = menu.Create(parent);
+        menu._root = menu.Create(parent);
 
-        if (menu.root == null)
+        if (menu._root == null)
         {
             Destroy(gameObject);
             return null;
         }
         
         menu.SetActive(false);
-        menus.Add((typeof(T), menu));
+        Menus.Add(typeof(T), menu);
 
         return menu;
     }
@@ -90,11 +87,11 @@ public abstract class PluginMenu : MonoBehaviour
     #endregion
     #region Set Active
 
-    private GameObject root;
+    private GameObject _root;
 
     private void SetActive(bool isActive)
     {
-        root?.SetActive(isActive);
+        _root?.SetActive(isActive);
         gameObject.SetActive(isActive);
     }
 
@@ -116,7 +113,7 @@ public abstract class PluginMenu : MonoBehaviour
 
         GetPrevious()?.SetActive(false);
         
-        history.Push(this);
+        History.Add(this);
     }
 
     #endregion
@@ -133,7 +130,7 @@ public abstract class PluginMenu : MonoBehaviour
     /// </summary>
     public static void CloseAll()
     {
-        while (history.Count > 0)
+        while (History.Count > 0)
             GetPrevious()?.Close();
     }
     
@@ -147,7 +144,7 @@ public abstract class PluginMenu : MonoBehaviour
         var prev = GetPrevious();
 
         if (prev == this)
-            history.Pop();
+            History.RemoveAt(History.Count - 1);
         
         GetPrevious()?.SetActive(true);
     }

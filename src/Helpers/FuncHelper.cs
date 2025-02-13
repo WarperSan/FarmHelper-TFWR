@@ -21,19 +21,17 @@ public static class FuncHelper
     /// <returns>
     /// Success of the addition
     /// </returns>
-    public static bool Add(string name, Func<List<IPyObject>, double> callback)
+    public static bool Add(string name, Func<List<IPyObject>, Simulation, Execution, double> callback)
     {
-        var functions = Saver.Inst.mainFarm.workspace.interpreter.bf.functions;
-
-        // If name already used, skip
-        if (!functions.TryAdd(name, callback))
-        {
-            Log.Info<FarmHelperPlugin>($"A function named '{name}' already existed.");
-            return false; 
-        }
+        var newFunction = new PyFunction(
+            name,
+            callback
+        );
+        
+        BuiltinFunctions.functionList.Add(newFunction);
 
         // Unlocks the function
-        Saver.Inst.mainFarm.unlocks.Add(name.ToLower());
+        //Saver.Inst.mainFarm.unlocks.Add(name.ToLower());
         return true;
     }
     
@@ -45,8 +43,8 @@ public static class FuncHelper
     /// <returns>
     /// Success of the addition
     /// </returns>
-    public static bool Add(string name, Func<Interpreter, List<IPyObject>, double> callback)
-        => Add(name, prm => callback?.Invoke(Saver.Inst.mainFarm.workspace.interpreter, prm) ?? 0);
+    //public static bool Add(string name, Func<Execution, List<IPyObject>, double> callback)
+    //    => Add(name, prm => callback?.Invoke(Saver.Inst.mainFarm.workspace.interpreter, prm) ?? 0);
 
     /// <summary>
     /// Adds a built-in function
@@ -95,16 +93,16 @@ public static class FuncHelper
         var argumentTypes = new List<Type>();
         var parameterInfos = new List<ParameterInfo>();
 
-        for (int i = 0; i < types.Length; i++)
+        for (var i = 0; i < types.Length; i++)
         {
-            Type type = types[i];
+            var type = types[i];
             Type typeToAdd = null;
 
             // If type children of IPyObject, use type
             if (typeof(IPyObject).IsAssignableFrom(type))
                 typeToAdd = type;
             // If type has conversion, use converted type
-            else if (typeConverts.TryGetValue(type, out var convertedType))
+            else if (TypeConverts.TryGetValue(type, out var convertedType))
                 typeToAdd = convertedType;
             
             // Skip invalid types
@@ -115,13 +113,13 @@ public static class FuncHelper
             argumentTypes.Add(typeToAdd);
         }
         
-        bool success = Add(codeName, (interpreter, @params) => {
+        var success = Add(codeName, (@params, simulation, execution) => {
             
             // Add the missing optional parameters
             ManageOptionals(@params, parameterInfos, argumentTypes);
             
             // Manage params array
-            int arrayArgs = ManageParamArray(
+            var arrayArgs = ManageParamArray(
                 @params, 
                 parameterInfos, 
                 argumentTypes,
@@ -140,7 +138,7 @@ public static class FuncHelper
                 ));
             }
             
-            for (int i = 0; i < @params.Count; ++i)
+            for (var i = 0; i < @params.Count; ++i)
             {
                 if (!argumentTypes[i].IsInstanceOfType(@params[i]))
                 {
@@ -158,10 +156,10 @@ public static class FuncHelper
             var arguments = ConvertParameters(
                 @params,
                 types,
-                interpreter,
+                execution,
                 arrayArgs
             );
-
+            
             // Add empty params array
             if (arguments.Count != parameters.Length && paramsItem != null)
                 arguments.Add(Array.CreateInstance(paramsItem, 0));
@@ -187,9 +185,9 @@ public static class FuncHelper
     /// <returns>Success of all the additions</returns>
     public static bool AddAll<T>() where T : class
     {
-        bool success = true;
+        var success = true;
         
-        foreach (var method in typeof(T).GetMethods(Constants.ALL_FLAGS))
+        foreach (var method in typeof(T).GetMethods(Constants.AllFlags))
         {
             var attr = method.GetCustomAttribute<PyFunctionAttribute>();
             
@@ -197,8 +195,9 @@ public static class FuncHelper
                 continue;
 
             var paramTypes = method.GetParameters().Select(param => param.ParameterType);
-            var paramAndReturnTypes = paramTypes.Append(method.ReturnType).ToArray();
-            var delegateType = Expression.GetDelegateType(paramAndReturnTypes);
+            var paramAndReturnTypes = paramTypes.ToList();
+            paramAndReturnTypes.Add(method.ReturnType);
+            var delegateType = Expression.GetDelegateType(paramAndReturnTypes.ToArray());
             
             success &= Add(method.CreateDelegate(delegateType));
         }
@@ -208,7 +207,7 @@ public static class FuncHelper
     
     #region Arguments Converting
 
-    private static readonly Dictionary<Type, Type> typeConverts = new() {
+    private static readonly Dictionary<Type, Type> TypeConverts = new() {
         [typeof(sbyte)] = typeof(PyNumber),
         [typeof(byte)] = typeof(PyNumber),
         [typeof(char)] = typeof(PyNumber),
@@ -254,7 +253,7 @@ public static class FuncHelper
 
     private static void ManageOptionals(List<IPyObject> @params, List<ParameterInfo> infos, List<Type> types)
     {
-        for (int i = @params.Count; i < infos.Count; i++)
+        for (var i = @params.Count; i < infos.Count; i++)
         {
             if (!infos[i].IsOptional)
                 break;
@@ -275,7 +274,7 @@ public static class FuncHelper
         
         // Add missing
         var arrayArgs = @params.Count - infos.Count;
-        for (int i = 0; i < arrayArgs; i++)
+        for (var i = 0; i < arrayArgs; i++)
             types.Add(types.Last());
         
         return Math.Max(arrayArgs, 0);
@@ -283,26 +282,26 @@ public static class FuncHelper
     private static List<object> ConvertParameters(
         List<IPyObject> @params, 
         Type[] types, 
-        Interpreter interpreter,
+        Execution execution,
         int arrayArgs
     ) {
         var arguments = new List<object>();
-        List<IPyObject>.Enumerator it = @params.GetEnumerator();
-        bool hasNext = it.MoveNext();
+        var it = @params.GetEnumerator();
+        var hasNext = it.MoveNext();
         while (hasNext)
         {
             object result;
-            Type type = types[arguments.Count];
-            Type itemType = type.GetElementType();
+            var type = types[arguments.Count];
+            var itemType = type.GetElementType();
 
-            if (type == typeof(Interpreter))
-                result = interpreter;
+            if (type == typeof(Execution))
+                result = execution;
             // If type is array, put all items in it
             else if (type.IsArray && itemType != null)
             {
                 var tempArgs = Array.CreateInstance(itemType, arrayArgs);
 
-                for (int k = 0; k < tempArgs.Length; k++)
+                for (var k = 0; k < tempArgs.Length; k++)
                 {
                     ConvertParameter(it.Current, itemType, out result);
                     tempArgs.SetValue(result, k);

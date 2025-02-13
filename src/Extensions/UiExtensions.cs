@@ -50,7 +50,7 @@ public static class UiExtensions
         if (asset == null)
             throw new System.NullReferenceException($"No asset named '{name}' was found.");
 
-        Transform transform = parent switch
+        var transform = parent switch
         {
             Component o => o.transform,
             GameObject obj => obj.transform,

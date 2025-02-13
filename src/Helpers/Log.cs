@@ -11,7 +11,7 @@ public static class Log
     private static void LogSelf<T>(object data, LogLevel level) where T : BaseUnityPlugin
     {
         // Log
-        var plugin = (BaseUnityPlugin) PluginHelper.GetPlugin<T>();
+        BaseUnityPlugin plugin = PluginHelper.GetPlugin<T>();
         var logger = plugin?.Logger ?? BepInEx.Logging.Logger.CreateLogSource(typeof(T).Name);
         
         logger.Log(level, data ?? "null");
