@@ -10,7 +10,11 @@ internal class ModHelperFunctions
 {
     internal static void LoadAll()
     {
-        FuncHelper.AddAll<ModHelperFunctions>();
+        FuncHelper.AddMethod(Pow);
+        FuncHelper.AddMethod(Floor);
+        FuncHelper.AddMethod(Round);
+        FuncHelper.AddMethod(Avg);
+
         LocalizerHelper.Add("code_tooltip_pow", @"`pow(x, y)`
 Returns the number `x` raised to the power `y`.
 
@@ -64,7 +68,6 @@ Takes the time of `1` operations to execute.");
         return Execution.OPERATION_OPS;
     }
 
-    // --- PARAMS ---
     [PyFunction("avg", "#33b5aa")]
     private static double Avg(Execution execution, double a, double b, params double[] args)
     {
@@ -73,12 +76,4 @@ Takes the time of `1` operations to execute.");
         execution.State.ReturnValue = new PyNumber(total);
         return Execution.OPERATION_OPS;
     }
-
-    [PyFunction("test", "#33b5aa")]
-    private static double Test(Execution execution, int a, double b)
-    {
-        execution.State.ReturnValue = new PyNumber(a + b);
-        return Execution.OPERATION_OPS;
-    }
-    // ---
 }
