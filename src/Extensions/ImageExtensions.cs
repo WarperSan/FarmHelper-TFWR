@@ -35,7 +35,7 @@ public static class ImageExtensions
         // If no texture found
         if (t == null)
         {
-            Log.Warning<FarmHelperPlugin>($"No texture found for '{name}'.");
+            Log.Warning($"No texture found for '{name}'.");
             image.sprite = null;
             return;
         }
@@ -47,7 +47,7 @@ public static class ImageExtensions
         {
             rect.height = Math.Min(t.height, rect.height);
             rect.width = Math.Min(t.width, rect.width);
-            Log.Warning<FarmHelperPlugin>($"Resized rect to fit: {rect.height}x{rect.width}");
+            Log.Debug($"Resized rect to fit: {rect.height}x{rect.width}");
         }
        
         // Create sprite

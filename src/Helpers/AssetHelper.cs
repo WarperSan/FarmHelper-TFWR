@@ -45,10 +45,7 @@ public static class AssetHelper
         var stream = typeof(T).Assembly.GetManifestResourceStream(name);
 
         if (stream == null)
-        {
-            Log.Warning<FarmHelperPlugin>("NO STREAM FOUND");
             return null;
-        }
 
         using var memoryStream = new System.IO.MemoryStream();
         stream.CopyTo(memoryStream);
@@ -57,10 +54,7 @@ public static class AssetHelper
         
         // If no content found, skip
         if (bytes.Length == 0)
-        {
-            Log.Warning<FarmHelperPlugin>("BYTES EMPTY");
             return null;
-        }
         
         // Create texture
         var t = new Texture2D(1, 1);

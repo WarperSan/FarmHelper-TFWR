@@ -23,7 +23,7 @@ public static class ColorHelper
         // If invalid color, skip
         if (!IsValidColor(color))
         {
-            Log.Warning<FarmHelperPlugin>($"'{color}' is not a valid HEX code and will not be put on the pattern '{pattern}'.");
+            Log.Warning($"'{color}' is not a valid HEX code and will not be put on the pattern '{pattern}'.");
             return false;
         }
         

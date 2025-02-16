@@ -59,7 +59,7 @@ public abstract class PluginMenu : MonoBehaviour
 
         if (parent == null)
         {
-            Log.Warning<FarmHelperPlugin>($"The object 'Menu' was not found at '{Constants.MENU_PATH}'.");
+            Log.Warning($"The object 'Menu' was not found at '{Constants.MENU_PATH}'.");
             parent = FindObjectOfType<Menu>();
         }
         

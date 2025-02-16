@@ -1,31 +1,30 @@
-﻿using BepInEx;
-using BepInEx.Logging;
+﻿using BepInEx.Logging;
 
 namespace FarmHelper.Helpers;
 
 /// <summary>
 /// Class helping for logging stuff
 /// </summary>
-public static class Log
+internal static class Log
 {
-    private static void LogSelf<T>(object data, LogLevel level) where T : BaseUnityPlugin
-    {
-        // Log
-        BaseUnityPlugin plugin = PluginHelper.GetPlugin<T>();
-        var logger = plugin?.Logger ?? BepInEx.Logging.Logger.CreateLogSource(typeof(T).Name);
-        
-        logger.Log(level, data ?? "null");
-    }
+    private static ManualLogSource _logger;
+    
+    /// <summary>
+    /// Assigns the logger of this mod to the given logger
+    /// </summary>
+    public static void SetLogger(ManualLogSource logger) => _logger = logger;
+    
+    private static void LogSelf(object data, LogLevel level) => _logger?.Log(level, data ?? "null");
 
     /// <inheritdoc cref="BepInEx.Logging.ManualLogSource.LogInfo"/>
-    public static void Info<T>(object data) where T : BaseUnityPlugin => LogSelf<T>(data, LogLevel.Info);
+    public static void Info(object data) => LogSelf(data, LogLevel.Info);
     
     /// <inheritdoc cref="BepInEx.Logging.ManualLogSource.LogDebug"/>
-    public static void Debug<T>(object data) where T : BaseUnityPlugin => LogSelf<T>(data, LogLevel.Debug);
+    public static void Debug(object data) => LogSelf(data, LogLevel.Debug);
     
     /// <inheritdoc cref="BepInEx.Logging.ManualLogSource.LogWarning"/>
-    public static void Warning<T>(object data) where T : BaseUnityPlugin => LogSelf<T>(data, LogLevel.Warning);
+    public static void Warning(object data) => LogSelf(data, LogLevel.Warning);
     
     /// <inheritdoc cref="BepInEx.Logging.ManualLogSource.LogError"/>
-    public static void Error<T>(object data) where T : BaseUnityPlugin => LogSelf<T>(data, LogLevel.Error);
+    public static void Error(object data) => LogSelf(data, LogLevel.Error);
 }

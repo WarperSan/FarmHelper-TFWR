@@ -15,9 +15,9 @@ public static class DebugExtensions
     public static void PrintComponents(this Component origin)
     {
         var components = origin.GetComponents<Component>();
-        Log.Info<FarmHelperPlugin>($"Components in '{origin.name}' ({components.Length}):");
+        Log.Info($"Components in '{origin.name}' ({components.Length}):");
         foreach (var component in components)
-            Log.Info<FarmHelperPlugin>($"- {component.GetType().FullName}");
+            Log.Info($"- {component.GetType().FullName}");
     }
 
     /// <summary>
@@ -27,7 +27,7 @@ public static class DebugExtensions
     /// <param name="level"></param>
     public static void PrintDeeper(this Transform parent, int level = 0)
     {
-        Log.Info<FarmHelperPlugin>(new string(' ', level) + $"- {parent.name}");
+        Log.Info(new string(' ', level) + $"- {parent.name}");
         
         foreach (Transform variable in parent)
             variable.PrintDeeper(level + 1);

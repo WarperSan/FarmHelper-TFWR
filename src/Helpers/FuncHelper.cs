@@ -97,7 +97,7 @@ public static class FuncHelper
 
         if (attribute == null)
         {
-            Log.Warning<FarmHelperPlugin>($"'{methodInfo.Name}' does not contain the attribute '{nameof(PyFunctionAttribute)}'.");
+            Log.Warning($"'{methodInfo.Name}' does not contain the attribute '{nameof(PyFunctionAttribute)}'.");
             return false;
         }
         

@@ -84,7 +84,7 @@ public class PluginListMenu : PluginMenu
         // Add button
         if (!UiHelper.AddTitleButton(1, 3, out var pluginsBtn))
         {
-            Log.Warning<FarmHelperPlugin>($"Could not create the title button for {nameof(PluginListMenu)}.");
+            Log.Warning($"Could not create the title button for {nameof(PluginListMenu)}.");
             return false;
         }
         
