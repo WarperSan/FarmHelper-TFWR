@@ -35,4 +35,37 @@ public static class AssetHelper
     /// </summary>
     public static T LoadAsset<T>(string bundleName, string assetName) where T : Object 
         => LoadBundle(bundleName).LoadAsset<T>(assetName);
+    
+    /// <summary>
+    /// Loads the given image and creates a texture from it
+    /// </summary>
+    public static Texture2D GetTexture<T>(string name)
+    {
+        // Read bytes
+        var stream = typeof(T).Assembly.GetManifestResourceStream(name);
+
+        if (stream == null)
+        {
+            Log.Warning<FarmHelperPlugin>("NO STREAM FOUND");
+            return null;
+        }
+
+        using var memoryStream = new System.IO.MemoryStream();
+        stream.CopyTo(memoryStream);
+        
+        var bytes = memoryStream.ToArray();
+        
+        // If no content found, skip
+        if (bytes.Length == 0)
+        {
+            Log.Warning<FarmHelperPlugin>("BYTES EMPTY");
+            return null;
+        }
+        
+        // Create texture
+        var t = new Texture2D(1, 1);
+        t.LoadImage(bytes);
+
+        return t;
+    }
 }

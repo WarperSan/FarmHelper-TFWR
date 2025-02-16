@@ -1,4 +1,5 @@
-﻿using FarmHelper.Helpers;
+﻿using FarmHelper.API;
+using FarmHelper.Helpers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -45,8 +46,7 @@ public static class UiExtensions
     /// </summary>
     private static GameObject Add(this Object parent, string name)
     {
-        var bundlePath = API.Resource.GetBundle("uibundle.assets");
-        var asset = AssetHelper.LoadAsset<GameObject>(bundlePath, name);
+        var asset = AssetHelper.LoadAsset<GameObject>(Constants.UI_BUNDLE, name);
 
         if (asset == null)
             throw new System.NullReferenceException($"No asset named '{name}' was found.");

@@ -55,11 +55,11 @@ public abstract class PluginMenu : MonoBehaviour
         
         var menu = gameObject.AddComponent<T>();
 
-        var parent = GameObject.Find(Constants.MenuPath)?.GetComponent<Menu>();
+        var parent = GameObject.Find(Constants.MENU_PATH)?.GetComponent<Menu>();
 
         if (parent == null)
         {
-            Log.Warning<FarmHelperPlugin>($"The object 'Menu' was not found at '{Constants.MenuPath}'.");
+            Log.Warning<FarmHelperPlugin>($"The object 'Menu' was not found at '{Constants.MENU_PATH}'.");
             parent = FindObjectOfType<Menu>();
         }
         

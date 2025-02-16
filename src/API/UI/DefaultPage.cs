@@ -65,7 +65,7 @@ public static class DefaultPage
         link.nameText.gameObject.SetActive(false);
     
         // Set image
-        link.GetIcon().LoadSprite<FarmHelperPlugin>(Resource.GetImage("icon-link.png"), 64);
+        link.GetIcon().LoadSprite<FarmHelperPlugin>(Constants.ICON_LINK, 64);
 
         // Set button click
         link.SetListener(() => Application.OpenURL(url));

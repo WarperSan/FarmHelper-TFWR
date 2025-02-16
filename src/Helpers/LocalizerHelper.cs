@@ -36,17 +36,17 @@ public static class LocalizerHelper
             }
 
             // If key not found in ANY, 
-            if (lang == Constants.Any) 
+            if (lang == Constants.ANY_LANGUAGE) 
                 return null;
 
-            lang = Constants.Any;
+            lang = Constants.ANY_LANGUAGE;
         }
     }
     
     /// <summary>
     /// Adds the given value at the given key to the given language
     /// </summary>
-    public static void Add(string key, string value, string lang = Constants.Any)
+    public static void Add(string key, string value, string lang = Constants.ANY_LANGUAGE)
     {
         if (!Languages.ContainsKey(lang)) 
             Languages.Add(lang, new Dictionary<string, string>());

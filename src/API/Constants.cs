@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+﻿// ReSharper disable InconsistentNaming
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 namespace FarmHelper.API;
@@ -8,23 +8,22 @@ namespace FarmHelper.API;
 /// </summary>
 public static class Constants
 {
-    public const float MainTitleOffsetX = 15f;
-    public const float MainTitleOffsetY = 62.68f;
+    public const float MAIN_TITLE_OFFSET_X = 15f;
+    public const float MAIN_TITLE_OFFSET_Y = 62.68f;
     
     // --- PATHS ---
-    public const string MenuPath = "OverlayUI/MenuCanvas/Menu";
-    public const string TitlePath = MenuPath + "/TitlePage";
-    // ---
-    
-    // --- FLAGS ---
-    public const BindingFlags InstanceFlags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance;
-    public const BindingFlags StaticFlags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static;
-    
-    public const BindingFlags AllFlags = InstanceFlags | StaticFlags;
+    public const string MENU_PATH = "OverlayUI/MenuCanvas/Menu";
+    public const string TITLE_PATH = MENU_PATH + "/TitlePage";
     // ---
     
     // --- LANG ---
-    public const string Any = "ANY";
-    public const string English = "EN";
+    public const string ANY_LANGUAGE = "ANY";
+    public const string ENGLISH = "EN";
+    // ---
+    
+    // --- ASSETS ---
+    private const string RESOURCES_PATH = nameof(FarmHelper) + ".Resources";
+    public const string UI_BUNDLE = RESOURCES_PATH + ".Bundles.uibundle.assets";
+    public const string ICON_LINK = RESOURCES_PATH + ".Images.icon-link.png";
     // ---
 }

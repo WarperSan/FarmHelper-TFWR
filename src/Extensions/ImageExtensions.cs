@@ -30,12 +30,12 @@ public static class ImageExtensions
         Vector2 pivot,
         float pixelsPerUnit
     ) where T : BaseUnityPlugin {
-        name = $"{typeof(T).Namespace}.{name}";
-        var t = GetTexture<T>(name);
+        var t = AssetHelper.GetTexture<T>(name);
 
         // If no texture found
         if (t == null)
         {
+            Log.Warning<FarmHelperPlugin>($"No texture found for '{name}'.");
             image.sprite = null;
             return;
         }
@@ -57,26 +57,5 @@ public static class ImageExtensions
             pivot, 
             pixelsPerUnit
         );
-    }
-
-    private static Texture2D GetTexture<T>(string name) where T : BaseUnityPlugin
-    {
-        // Read bytes
-        var stream = System.Reflection.Assembly.GetAssembly(typeof(T)).GetManifestResourceStream(name);
-
-        using var memoryStream = new System.IO.MemoryStream();
-        stream?.CopyTo(memoryStream);
-        
-        var bytes = memoryStream.ToArray();
-        
-        // If no content found, skip
-        if (bytes.Length == 0)
-            return null;
-        
-        // Create texture
-        var t = new Texture2D(1, 1);
-        t.LoadRawTextureData(bytes);
-
-        return t;
     }
 }
