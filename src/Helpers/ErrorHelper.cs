@@ -9,6 +9,14 @@ namespace FarmHelper.Helpers;
 /// </summary>
 public static class ErrorHelper
 {
+    // ReSharper disable InconsistentNaming
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    private const string ERROR_PREFIX = nameof(FarmHelper) + "_error";
+    public const string WRONG_ARGUMENTS_ERROR = ERROR_PREFIX + "_wrong_args_detailed";
+    public const string WRONG_ARGUMENT_COUNT_ERROR = ERROR_PREFIX + "_wrong_number_args_detailed";
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+    // ReSharper restore InconsistentNaming
+
     /// <summary>
     /// Generates an exception for the wrong number of arguments given
     /// </summary>
@@ -31,14 +39,14 @@ public static class ErrorHelper
             if (expected.GetCustomAttribute<ParamArrayAttribute>() != null)
                 continue;
             
-            expectedNames.Add(expected.ParameterType.FullName);
+            expectedNames.Add(expected.ParameterType.Name);
         }
 
         for (var i = 0; i < actualArguments.Count; i++)
             actualNames[i] = CodeUtilities.ToNiceString(actualArguments[i], isSequenceElement: true);
         
         return new ExecuteException(CodeUtilities.LocalizeAndFormat(
-            "error_wrong_number_args_detailed", 
+            WRONG_ARGUMENT_COUNT_ERROR, 
             functionName + "()", 
             expectedNames.Count,
             string.Join(", ", expectedNames),
@@ -56,9 +64,9 @@ public static class ErrorHelper
     public static Exception WrongArgumentType(string functionName, Type expectedArgument, IPyObject actualArgument, int index)
     {
         return new ExecuteException(CodeUtilities.LocalizeAndFormat(
-            "error_wrong_args_detailed",
+            WRONG_ARGUMENTS_ERROR,
             functionName + "()",
-            expectedArgument.FullName,
+            expectedArgument.Name,
             index,
             CodeUtilities.ToNiceString(actualArgument, isSequenceElement: true)
         ));

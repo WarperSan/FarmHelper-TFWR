@@ -26,8 +26,8 @@ public class FarmHelperPlugin : BaseUnityPlugin, IToggleable
 
     public void OnAdd()
     {
-        LocalizerHelper.Add("error_wrong_number_args_detailed", "{0} takes {1} arguments.\n\nExpected: {2}\nReceived: {3}");
-        LocalizerHelper.Add("error_wrong_args_detailed", "{0} expected '{1}' as the #{2} argument.\n\nInstead, it got {3}.");
+        LocalizerHelper.Add(ErrorHelper.WRONG_ARGUMENT_COUNT_ERROR, "{0} takes {1} arguments.\n\nExpected:\n{2}\n\nReceived:\n{3}");
+        LocalizerHelper.Add(ErrorHelper.WRONG_ARGUMENTS_ERROR, "{0} expected '{1}' as the #{2} argument.\n\nInstead, it got {3}.");
         
         ModHelperFunctions.LoadAll();
         PluginMenu.Create<PluginListMenu>();

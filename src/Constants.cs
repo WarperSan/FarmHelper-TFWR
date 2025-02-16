@@ -1,7 +1,7 @@
 ﻿// ReSharper disable InconsistentNaming
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-namespace FarmHelper.API;
+namespace FarmHelper;
 
 /// <summary>
 /// Contains useful constants to ease the code.
