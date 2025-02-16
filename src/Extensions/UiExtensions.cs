@@ -45,7 +45,8 @@ public static class UiExtensions
     /// </summary>
     private static GameObject Add(this Object parent, string name)
     {
-        var asset = AssetHelper<FarmHelperPlugin>.LoadAsset<GameObject>(API.Resource.GetBundle("uibundle.assets"), name);
+        var bundlePath = API.Resource.GetBundle("uibundle.assets");
+        var asset = AssetHelper.LoadAsset<GameObject>(bundlePath, name);
 
         if (asset == null)
             throw new System.NullReferenceException($"No asset named '{name}' was found.");

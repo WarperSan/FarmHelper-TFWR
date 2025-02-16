@@ -1,30 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace FarmHelper.Helpers;
 
-internal static class AssetHelper
+/// <summary>
+/// Class helping to load bundles and assets
+/// </summary>
+public static class AssetHelper
 {
-    private static readonly Dictionary<string, AssetBundle> CachedBundles = new();
+    private static readonly Dictionary<string, AssetBundle> LoadedBundles = new();
 
-    internal static AssetBundle LoadBundle<T>(string name)
+    /// <summary>
+    /// Loads the given bundle
+    /// </summary>
+    public static AssetBundle LoadBundle(string name)
     {
-        if (CachedBundles.TryGetValue(name, out var bundle))
+        if (LoadedBundles.TryGetValue(name, out var bundle))
             return bundle;
-        
-        var stream = typeof(T).Assembly.GetManifestResourceStream(name);
 
+        var assembly = Assembly.GetCallingAssembly();
+        var stream = assembly.GetManifestResourceStream(name);
+        
         if (stream == null)
-            throw new NullReferenceException($"No bundle named '{name}'.");
+            throw new NullReferenceException($"No resource was found for '{name}'.");
         
-        return CachedBundles[name] = AssetBundle.LoadFromStream(stream);
+        return LoadedBundles[name] = AssetBundle.LoadFromStream(stream);
     }
-}
 
-public static class AssetHelper<TU>
-{
-    public static T LoadAsset<T>(string bundleName, string assetName) where T : Object
-        => AssetHelper.LoadBundle<TU>(bundleName)?.LoadAsset<T>(assetName);
+    /// <summary>
+    /// Loads the given asset from the given bundle
+    /// </summary>
+    public static T LoadAsset<T>(string bundleName, string assetName) where T : Object 
+        => LoadBundle(bundleName).LoadAsset<T>(assetName);
 }

@@ -3,7 +3,8 @@
 namespace FarmHelper.API.Attributes;
 
 /// <summary>
-/// Attribute marking every function that should be added as a built-in function
+/// Attribute marking every function that can be automatically added as a built-in
+/// function using <see cref="Helpers.FuncHelper.AddMethod(Delegate)"/>
 /// </summary>
 [AttributeUsage(AttributeTargets.Method)]
 public class PyFunctionAttribute : Attribute
@@ -14,7 +15,7 @@ public class PyFunctionAttribute : Attribute
     public string Name { get; private set; }
 
     /// <summary>
-    /// Color of the function
+    /// Color of the function in HEX
     /// </summary>
     public string Color { get; private set; }
 
