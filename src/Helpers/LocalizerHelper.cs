@@ -13,7 +13,7 @@ public static class LocalizerHelper
     ///      Key => key (code_tooltip_max)
     ///      Value => value (actual text)
     /// </summary>
-    private static readonly Dictionary<string, Dictionary<string, string>> Languages = new();
+    private readonly static Dictionary<string, Dictionary<string, string>> Languages = new();
 
     /// <summary>
     /// Tries to find the text of the given key in the given language or in any language.

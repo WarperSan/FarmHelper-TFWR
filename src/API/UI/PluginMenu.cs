@@ -12,8 +12,8 @@ public abstract class PluginMenu : MonoBehaviour
 {
     #region Static
 
-    private static readonly Dictionary<Type, PluginMenu> Menus = [];
-    private static readonly List<PluginMenu> History = [];
+    private readonly static Dictionary<Type, PluginMenu> Menus = [];
+    private readonly static List<PluginMenu> History = [];
 
     /// <summary>
     /// Obtains the first instance of the given menu

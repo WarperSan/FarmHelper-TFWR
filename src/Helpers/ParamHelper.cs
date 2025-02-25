@@ -13,7 +13,7 @@ internal static class ParamHelper
     /// <summary>
     /// List of every type and their Python equivalent
     /// </summary>
-    private static readonly Dictionary<Type, Type> TypeConverts = new() {
+    private readonly static Dictionary<Type, Type> TypeConverts = new() {
         [typeof(sbyte)] = typeof(PyNumber),
         [typeof(byte)] = typeof(PyNumber),
         [typeof(char)] = typeof(PyNumber),

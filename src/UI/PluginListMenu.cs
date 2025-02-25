@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Reflection;
 using BepInEx;
+using BepInEx.Bootstrap;
 using FarmHelper.API.Attributes;
 using FarmHelper.API.Interfaces;
 using FarmHelper.API.UI;
@@ -23,8 +24,11 @@ public class PluginListMenu : PluginMenu
     {
         var menu = CreateMenu(parent.transform);
         
-        var plugins = PluginHelper.GetPlugins()
-            .OrderBy(x => x.Info.Metadata.Name).ToArray();
+        var plugins = Chainloader.PluginInfos
+            .Select(pi => pi.Value.Instance)
+            .Where(p => p?.Info != null)
+            .OrderBy(x => x.Info.Metadata.Name)
+            .ToArray();
         
         // Add title button
         if (!AddTitleButton(menu, plugins.Length))

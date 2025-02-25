@@ -7,14 +7,7 @@ namespace FarmHelper.Helpers;
 /// </summary>
 internal static class Log
 {
-    private static ManualLogSource _logger;
-    
-    /// <summary>
-    /// Assigns the logger of this mod to the given logger
-    /// </summary>
-    public static void SetLogger(ManualLogSource logger) => _logger = logger;
-    
-    private static void LogSelf(object data, LogLevel level) => _logger?.Log(level, data ?? "null");
+    private static void LogSelf(object data, LogLevel level) => FarmHelperPlugin.Instance?.Logger?.Log(level, data ?? "null");
 
     /// <inheritdoc cref="BepInEx.Logging.ManualLogSource.LogDebug"/>
     public static void Debug(object data) => LogSelf(data, LogLevel.Debug);

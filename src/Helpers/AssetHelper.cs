@@ -11,7 +11,7 @@ namespace FarmHelper.Helpers;
 /// </summary>
 public static class AssetHelper
 {
-    private static readonly Dictionary<string, AssetBundle> LoadedBundles = new();
+    private readonly static Dictionary<string, AssetBundle> LoadedBundles = new();
 
     /// <summary>
     /// Loads the given bundle

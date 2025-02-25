@@ -17,11 +17,17 @@ namespace FarmHelper;
 [FarmInfo("WarperSan", "https://github.com/WarperSan/FarmHelper-TFWR")]
 public class FarmHelperPlugin : BaseUnityPlugin, IToggleable
 {
+    /// <summary>
+    /// Instance of this plugin
+    /// </summary>
+    public static FarmHelperPlugin Instance { get; private set; } = null!;
+
     private void Awake()
     {
+        Instance = this;
+        
         var harmony = new Harmony("org.warpersan.farmhelper");
         harmony.PatchAll();
-        Log.SetLogger(Logger);
     }
 
     public void OnAdd()
