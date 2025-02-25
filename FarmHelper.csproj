@@ -5,8 +5,7 @@
         <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
         <RunPostBuildEvent>Always</RunPostBuildEvent>
         <Nullable>disable</Nullable>
-        <PackageId>FarmHelper</PackageId>
-        <IsPackable>false</IsPackable>
+        <RootNamespace>FarmHelper</RootNamespace>
         <DocumentationFile>bin\$(Configuration)\${PackageId}.xml</DocumentationFile>
     
         <!-- PATHS -->
