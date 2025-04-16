@@ -4,7 +4,7 @@
         <LangVersion>latest</LangVersion>
         <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
         <RunPostBuildEvent>Always</RunPostBuildEvent>
-        <Nullable>disable</Nullable>
+        <Nullable>enable</Nullable>
         <RootNamespace>FarmHelper</RootNamespace>
         <DocumentationFile>bin\$(Configuration)\${PackageId}.xml</DocumentationFile>
     

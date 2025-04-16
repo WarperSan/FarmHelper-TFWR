@@ -18,8 +18,14 @@ public static class ColorHelper
     /// <remarks>
     /// If <paramref name="fromStart"/> is true, this pattern can overwrite existing patterns
     /// </remarks>
-    public static bool Add(string pattern, string color, bool fromStart = false)
+    public static bool Add(string pattern, string? color, bool fromStart = false)
     {
+        if (color == null)
+        {
+            Log.Warning($"No color specified for the pattern '{pattern}'.");
+            return false;
+        }
+        
         // If invalid color, skip
         if (!IsValidColor(color))
         {
@@ -29,8 +35,8 @@ public static class ColorHelper
         
         // Add to colors
         // Never add before comments
-        CodeUtilities.colors.Insert(
-            fromStart ? System.Math.Min(CodeUtilities.colors.Count, 1) : CodeUtilities.colors.Count,
+        RegexColors.Insert(
+            fromStart ? 0 : -1,
             (new Regex(pattern), color)
         );
         

@@ -39,7 +39,7 @@ public static class AssetHelper
     /// <summary>
     /// Loads the given image and creates a texture from it
     /// </summary>
-    public static Texture2D GetTexture<T>(string name)
+    public static Texture2D? GetTexture<T>(string name)
     {
         // Read bytes
         var stream = typeof(T).Assembly.GetManifestResourceStream(name);

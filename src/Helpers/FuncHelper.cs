@@ -17,7 +17,7 @@ public static class FuncHelper
     /// <param name="callback">Code to run when executing the function</param>
     /// <param name="color">Color of the text used for the function</param>
     /// <returns>Succeeded to add the function</returns>
-    private static bool Add(string name, Func<List<IPyObject>, Simulation, Execution, double> callback, string color = null)
+    private static bool Add(string name, Func<List<IPyObject>, Simulation, Execution, double> callback, string? color = null)
     {
         var newFunction = new PyFunction(
             name,
@@ -27,9 +27,6 @@ public static class FuncHelper
         BuiltinFunctions.functionList.Add(newFunction);
         Farm.startUnlocks.Add(name.ToLower());
 
-        if (color == null)
-            return true;
-        
         return ColorHelper.Add(name + @"(?=\(.*?)", color, true);
     }
     
@@ -40,7 +37,7 @@ public static class FuncHelper
     /// <param name="callback">Code to run when executing the function</param>
     /// <param name="color">Color of the text used for the function</param>
     /// <returns>Succeeded to add the function</returns>
-    public static bool AddMethod(string name, Delegate callback, string color = null)
+    public static bool AddMethod(string name, Delegate callback, string? color = null)
     {
         var parameters = callback.Method.GetParameters();
         var types = new Type[parameters.Length];

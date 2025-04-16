@@ -19,7 +19,7 @@ public static class LocalizerHelper
     /// Tries to find the text of the given key in the given language or in any language.
     /// </summary>
     /// <returns>Value for the key or null if not found</returns>
-    public static string GetText(string lang, string key)
+    public static string? GetText(string? lang, string? key)
     {
         if (lang == null || key == null)
             return null;

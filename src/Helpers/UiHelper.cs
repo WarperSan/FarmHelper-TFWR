@@ -16,7 +16,7 @@ public static class UiHelper
     /// <param name="y">Y grid position</param>
     /// <param name="button">Button created</param>
     /// <returns>Was successfully created</returns>
-    public static bool AddTitleButton(int x, int y, out ColoredButton button)
+    public static bool AddTitleButton(int x, int y, out ColoredButton? button)
     {
         button = null;
 

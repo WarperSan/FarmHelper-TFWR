@@ -143,7 +143,7 @@ internal static class ParamHelper
     /// </summary>
     /// <param name="value">Value to convert</param>
     /// <param name="wanted">Type to convert to</param>
-    private static object ConvertParameter(object value, Type wanted)
+    private static object? ConvertParameter(object value, Type wanted)
     {
         // If value already correct type, return value
         if (wanted.IsInstanceOfType(value))
@@ -169,7 +169,7 @@ internal static class ParamHelper
     public static object[] ConvertParameters(
         List<IPyObject> @params,
         Type[] types,
-        params object[] globals
+        params object?[] globals
     ) {
         var arguments = new object[types.Length];
         var paramsEnum = @params.GetEnumerator();
@@ -178,7 +178,7 @@ internal static class ParamHelper
         for (var i = 0; i < types.Length; i++)
         {
             var type = types[i];
-            object value = null;
+            object? value = null;
             
             // Check for globals
             foreach (var global in globals)

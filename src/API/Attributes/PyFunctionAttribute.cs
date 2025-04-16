@@ -17,12 +17,12 @@ public class PyFunctionAttribute : Attribute
     /// <summary>
     /// Color of the function in HEX
     /// </summary>
-    public string Color { get; private set; }
+    public string? Color { get; private set; }
 
     /// <inheritdoc cref="PyFunctionAttribute"/>
     /// <param name="name">Name of the function to call in-game</param>
     /// <param name="color">Color of the function</param>
-    public PyFunctionAttribute(string name, string color = null)
+    public PyFunctionAttribute(string name, string? color = null)
     {
         Name = name;
         Color = color;

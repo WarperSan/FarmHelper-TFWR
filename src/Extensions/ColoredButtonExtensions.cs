@@ -27,8 +27,8 @@ public static class ColoredButtonExtensions
     /// Gets the icon of this button
     /// </summary>
     /// <remarks>
-    /// This only works for the buttons created from <see cref="UiExtensions.AddButton(Transform)"/>
+    /// This only works for the buttons created from <see cref="UiExtensions.AddButton(Object)"/>
     /// </remarks>
-    public static Image GetIcon(this ColoredButton button) 
+    public static Image? GetIcon(this ColoredButton button) 
         => button.transform.Find("Panel/Image")?.GetComponent<Image>();
 }
