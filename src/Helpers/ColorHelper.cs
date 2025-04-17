@@ -1,5 +1,5 @@
-﻿using System.Text.RegularExpressions;
-using UnityEngine;
+﻿using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace FarmHelper.Helpers;
 
@@ -8,54 +8,80 @@ namespace FarmHelper.Helpers;
 /// </summary>
 public static class ColorHelper
 {
+    private readonly static Dictionary<string, string> ColorPerGroup = [];
+    private readonly static Dictionary<string, List<string>> PatternsPerGroup = [];
+    
     /// <summary>
-    /// Adds a syntax color to the game
+    /// Adds a pattern for a given color
     /// </summary>
-    /// <param name="pattern">Pattern to respect to use this color</param>
+    /// <param name="pattern">REGEX pattern to respect</param>
     /// <param name="color">Color to use in HEX</param>
-    /// <param name="fromStart">Determines if the pattern is added at the start or at the end</param>
+    /// <param name="group">Name of the REGEX group</param>
     /// <returns>Success of the addition</returns>
-    /// <remarks>
-    /// If <paramref name="fromStart"/> is true, this pattern can overwrite existing patterns
-    /// </remarks>
-    public static bool Add(string pattern, string? color, bool fromStart = false)
+    public static bool Add(string pattern, string color, string group)
     {
-        if (color == null)
-        {
-            Log.Warning($"No color specified for the pattern '{pattern}'.");
-            return false;
-        }
-        
-        // If invalid color, skip
         if (!IsValidColor(color))
         {
             Log.Warning($"'{color}' is not a valid HEX code and will not be put on the pattern '{pattern}'.");
             return false;
         }
         
-        // Add to colors
-        // Never add before comments
-        RegexColors.Insert(
-            fromStart ? 0 : -1,
-            (new Regex(pattern), color)
-        );
+        if (string.IsNullOrEmpty(group))
+        {
+            Log.Warning($"Cannot add the pattern '{pattern}' to an empty group.");
+            return false;
+        }
+
+        ColorPerGroup[group] = color;
+
+        if (!PatternsPerGroup.TryGetValue(group, out var patterns))
+        {
+            PatternsPerGroup[group] = [pattern];
+            return true;
+        }
         
+        patterns.Add(pattern);
         return true;
     }
 
     /// <summary>
-    /// Adds a syntax color to the game
+    /// Compiles the registered patterns into a regex string
     /// </summary>
-    /// <param name="pattern">Pattern to respect to use this color</param>
-    /// <param name="color">Color to use</param>
-    /// <param name="fromStart">Determines if the pattern is added at the start or at the end</param>
-    /// <returns>Success of the addition</returns>
-    /// <remarks>
-    /// If <paramref name="fromStart"/> is true, this pattern can overwrite existing patterns
-    /// </remarks>
-    public static bool Add(string pattern, Color color, bool fromStart = false)
-        => Add(pattern, "#" + ColorUtility.ToHtmlStringRGB(color), fromStart);
-    
+    public static string GetRegexString()
+    {
+        var patternGroups = new List<string>();
+
+        // ReSharper disable once ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
+        foreach (var group in PatternsPerGroup)
+        {
+            var groupName = group.Key;
+            var patterns = string.Join("|", group.Value);
+            
+            patternGroups.Add($"(?<{groupName}>(?:{patterns}))");
+        }
+        
+        return string.Join("|", patternGroups);
+    }
+
+    /// <summary>
+    /// Adds the color to the given text depending on the match
+    /// </summary>
+    public static string? GetColoredText(Match match)
+    {
+        // ReSharper disable once ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
+        foreach (var group in ColorPerGroup)
+        {
+            var groupName = group.Key;
+     
+            if (!match.Groups[groupName].Success)
+                continue;
+
+            return $"<color={group.Value}>{match.Value}</color>";
+        }
+
+        return null;
+    }
+
     private static bool IsValidColor(string color)
     {
         // Should start with #

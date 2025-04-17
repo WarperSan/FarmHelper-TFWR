@@ -27,7 +27,7 @@ public static class FuncHelper
         BuiltinFunctions.functionList.Add(newFunction);
         Farm.startUnlocks.Add(name.ToLower());
 
-        return ColorHelper.Add(name + @"(?=\(.*?)", color, true);
+        return color == null || ColorHelper.Add(name + @"(?=\(.*?)", color, $"func_helper_{name}_color");
     }
     
     /// <summary>

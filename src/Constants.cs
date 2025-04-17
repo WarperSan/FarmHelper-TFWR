@@ -8,6 +8,10 @@ namespace FarmHelper;
 /// </summary>
 public static class Constants
 {
+    // --- MOD INFO ---
+    public const string GUID = "org.warpersan.farmhelper";
+    // ---
+    
     public const float MAIN_TITLE_OFFSET_X = 15f;
     public const float MAIN_TITLE_OFFSET_Y = 62.68f;
     
