@@ -4,7 +4,7 @@ using System.Reflection;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace FarmHelper.Helpers;
+namespace AgriCore.Helpers;
 
 /// <summary>
 /// Class helping to load bundles and assets

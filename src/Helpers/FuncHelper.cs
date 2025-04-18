@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using FarmHelper.API.Attributes;
+using AgriCore.API.Attributes;
 
-namespace FarmHelper.Helpers;
+namespace AgriCore.Helpers;
 
 /// <summary>
 /// Class helping with the addition of new built-in functions

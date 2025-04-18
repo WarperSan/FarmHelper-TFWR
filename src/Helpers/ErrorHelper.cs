@@ -1,16 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
-namespace FarmHelper.Helpers;
+namespace AgriCore.Helpers;
 
 /// <summary>
 /// Class helping with the generation of errors
 /// </summary>
 public static class ErrorHelper
 {
-    private const string ERROR_PREFIX = nameof(FarmHelper) + "_error";
+    private const string ERROR_PREFIX = nameof(AgriCore) + "_error";
     public const string WRONG_ARGUMENTS_ERROR = ERROR_PREFIX + "_wrong_args_detailed";
     public const string WRONG_ARGUMENT_COUNT_ERROR = ERROR_PREFIX + "_wrong_number_args_detailed";
 

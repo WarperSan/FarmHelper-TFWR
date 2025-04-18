@@ -1,23 +1,23 @@
-﻿using BepInEx;
-using FarmHelper.API.Attributes;
-using FarmHelper.Extensions;
-using FarmHelper.Helpers;
-using FarmHelper.Patches;
+﻿using AgriCore.API.Attributes;
+using AgriCore.Extensions;
+using AgriCore.Helpers;
+using AgriCore.Patches;
+using BepInEx;
 using HarmonyLib;
 
-namespace FarmHelper;
+namespace AgriCore;
 
 /// <summary>
 /// Plugin made to help other plugins 
 /// </summary>
-[BepInPlugin(Constants.GUID, "Farm Helper", "1.0.0.0")]
-[FarmInfo("WarperSan", "https://github.com/WarperSan/FarmHelper-TFWR")]
-public class FarmHelperPlugin : BaseUnityPlugin
+[BepInPlugin(Constants.GUID, "AgriCore", "1.0.0.0")]
+[FarmInfo("WarperSan", "https://github.com/WarperSan/AgriCore")]
+public class AgriCorePlugin : BaseUnityPlugin
 {
     /// <summary>
     /// Instance of this plugin
     /// </summary>
-    public static FarmHelperPlugin Instance { get; private set; } = null!;
+    public static AgriCorePlugin Instance { get; private set; } = null!;
 
     private void Awake()
     {

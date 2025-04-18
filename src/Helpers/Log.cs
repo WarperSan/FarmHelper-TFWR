@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using BepInEx.Logging;
 
-namespace FarmHelper.Helpers;
+namespace AgriCore.Helpers;
 
 /// <summary>
 /// Class helping for logging stuff
@@ -10,7 +10,7 @@ internal static class Log
 {
     private static void LogSelf(object?[] data, LogLevel level)
     {
-        var logger = FarmHelperPlugin.Instance.Logger;
+        var logger = AgriCorePlugin.Instance.Logger;
         
         if (logger == null)
             return;

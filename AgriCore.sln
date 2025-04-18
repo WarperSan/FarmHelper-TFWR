@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FarmHelper", "FarmHelper.csproj", "{4AF53A31-BF69-4D3C-81EF-8170CE4E0AC2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgriCore", "AgriCore.csproj", "{4AF53A31-BF69-4D3C-81EF-8170CE4E0AC2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,10 +1,10 @@
 using System;
+using AgriCore.Helpers;
 using BepInEx;
-using FarmHelper.Helpers;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace FarmHelper.Extensions;
+namespace AgriCore.Extensions;
 
 /// <summary>
 /// Class helping for everything concerning images

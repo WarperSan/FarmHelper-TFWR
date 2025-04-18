@@ -5,7 +5,7 @@
         <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
         <RunPostBuildEvent>Always</RunPostBuildEvent>
         <Nullable>enable</Nullable>
-        <RootNamespace>FarmHelper</RootNamespace>
+        <RootNamespace>AgriCore</RootNamespace>
         <DocumentationFile>bin\$(Configuration)\${PackageId}.xml</DocumentationFile>
     
         <!-- PATHS -->
@@ -14,6 +14,12 @@
         <ManagedPath>$(GamePath)/TheFarmerWasReplaced_Data/Managed</ManagedPath>
         <BepInExPath>$(GamePath)/BepInEx</BepInExPath>
         <PluginsPath>$(BepInExPath)/plugins</PluginsPath>
+        <AssemblyName>AgriCore</AssemblyName>
+        <IsPackable>false</IsPackable>
+        <PackageId>AgriCore</PackageId>
+        <Authors>WarperSan</Authors>
+        <Company>AgriCore</Company>
+        <Product>AgriCore</Product>
     </PropertyGroup>
 
     <!-- PACKAGES -->

@@ -1,7 +1,7 @@
 ﻿// ReSharper disable InconsistentNaming
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-namespace FarmHelper;
+namespace AgriCore;
 
 /// <summary>
 /// Contains useful constants to ease the code.
@@ -26,7 +26,7 @@ public static class Constants
     // ---
     
     // --- ASSETS ---
-    private const string RESOURCES_PATH = nameof(FarmHelper) + ".Resources";
+    private const string RESOURCES_PATH = nameof(AgriCore) + ".Resources";
     public const string UI_BUNDLE = RESOURCES_PATH + ".Bundles.uibundle.assets";
     public const string ICON_LINK = RESOURCES_PATH + ".Images.icon-link.png";
     // ---

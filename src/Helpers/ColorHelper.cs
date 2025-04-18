@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace FarmHelper.Helpers;
+namespace AgriCore.Helpers;
 
 /// <summary>
 /// Class helping to add syntax colors to the game

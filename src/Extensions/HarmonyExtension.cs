@@ -2,7 +2,7 @@ using System;
 using System.Reflection;
 using HarmonyLib;
 
-namespace FarmHelper.Extensions;
+namespace AgriCore.Extensions;
 
 /// <summary>
 /// Extensions methods for <see cref="Harmony"/>

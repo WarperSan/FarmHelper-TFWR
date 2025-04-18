@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Linq;
-using FarmHelper.API.Attributes;
-using FarmHelper.Helpers;
+using AgriCore.API.Attributes;
+using AgriCore.Helpers;
+
 // ReSharper disable UnusedMember.Local
 
-namespace FarmHelper;
+namespace AgriCore;
 
 internal class ModHelperFunctions
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FarmHelper.API.Attributes;
+namespace AgriCore.API.Attributes;
 
 /// <summary>
 /// Information useful for FarmHelper

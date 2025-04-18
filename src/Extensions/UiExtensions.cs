@@ -1,9 +1,9 @@
-﻿using FarmHelper.Helpers;
+﻿using AgriCore.Helpers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace FarmHelper.Extensions;
+namespace AgriCore.Extensions;
 
 /// <summary>
 /// Class helping for creating UI

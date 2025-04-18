@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FarmHelper.API.Attributes;
+namespace AgriCore.API.Attributes;
 
 /// <summary>
 /// Attribute marking every function that can be automatically added as a built-in

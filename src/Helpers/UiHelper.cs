@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace FarmHelper.Helpers;
+namespace AgriCore.Helpers;
 
 /// <summary>
 /// Class helping for UI elements

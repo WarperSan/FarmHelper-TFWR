@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Reflection.Emit;
 using System.Text.RegularExpressions;
-using FarmHelper.Extensions;
-using FarmHelper.Helpers;
+using AgriCore.Extensions;
+using AgriCore.Helpers;
 using HarmonyLib;
 
-namespace FarmHelper.Patches;
+namespace AgriCore.Patches;
 
 [HarmonyPatch(typeof(CodeUtilities))]
 internal static class CodeUtilitiesSyntaxColor2

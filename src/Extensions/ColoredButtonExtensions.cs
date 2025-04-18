@@ -2,7 +2,7 @@
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-namespace FarmHelper.Extensions;
+namespace AgriCore.Extensions;
 
 /// <summary>
 /// Extensions methods for <see cref="ColoredButton"/>

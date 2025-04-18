@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace FarmHelper.Helpers;
+namespace AgriCore.Helpers;
 
 /// <summary>
 /// Class helping to add texts to the game
@@ -24,22 +24,19 @@ public static class LocalizerHelper
         if (lang == null || key == null)
             return null;
         
-        while (true)
+        // If lang is defined
+        if (Languages.TryGetValue(lang, out var lines))
         {
-            // If lang is defined
-            if (Languages.TryGetValue(lang, out var lines))
-            {
-                // If key is defined in lang
-                if (lines.TryGetValue(key, out var value)) 
-                    return value;
-            }
-
-            // If key not found in ANY, 
-            if (lang == Constants.ANY_LANGUAGE) 
-                return null;
-
-            lang = Constants.ANY_LANGUAGE;
+            // If key is defined in lang
+            if (lines.TryGetValue(key, out var value)) 
+                return value;
         }
+
+        // If key not found in ANY, 
+        if (lang == Constants.ANY_LANGUAGE) 
+            return null;
+
+        return GetText(Constants.ANY_LANGUAGE, key);
     }
     
     /// <summary>

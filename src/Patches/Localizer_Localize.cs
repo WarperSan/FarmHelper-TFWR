@@ -1,7 +1,7 @@
-using FarmHelper.Helpers;
+using AgriCore.Helpers;
 using HarmonyLib;
 
-namespace FarmHelper.Patches;
+namespace AgriCore.Patches;
 
 [HarmonyPatch(typeof(Localizer), nameof(Localizer.Localize), typeof(string))]
 internal static class LocalizerLocalize
