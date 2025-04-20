@@ -11,7 +11,7 @@ namespace AgriCore;
 /// Plugin made to help other plugins 
 /// </summary>
 [BepInPlugin(Constants.GUID, "AgriCore", "1.0.0.0")]
-[FarmInfo("WarperSan", "https://github.com/AgriCore-s-Mods/AgriCore")]
+[FarmInfo("WarperSan", "https://github.com/TheModderWasReplaced/AgriCore")]
 public class AgriCorePlugin : BaseUnityPlugin
 {
     /// <summary>
